@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="ObsAppearancePage" parent="AdwBin">
+
+    <child>
+      <object class="AdwPreferencesPage">
+        <child>
+          <object class="AdwPreferencesGroup">
+
+            <!-- Color Scheme -->
+            <child>
+              <object class="AdwPreferencesRow">
+                <property name="activatable">False</property>
+                <child>
+                  <object class="AdwBin">
+                    <property name="css-name">colorschemeselector</property>
+                    <property name="halign">center</property>
+                    <property name="hexpand">True</property>
+                    <property name="margin-top">12</property>
+                    <child>
+                      <object class="GtkBox" id="box">
+                        <property name="hexpand">True</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="spacing">36</property>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkCheckButton" id="follow">
+                                <style>
+                                  <class name="style-selector"/>
+                                  <class name="follow"/>
+                                </style>
+                                <property name="hexpand">True</property>
+                                <property name="halign">center</property>
+                                <property name="focus-on-click">False</property>
+                                <property name="tooltip-text" translatable="yes">Follow system style</property>
+                                <signal name="notify::active" handler="on_check_active_changed_cb" object="ObsAppearancePage" swapped="no" />
+                                <accessibility>
+                                  <property name="label" translatable="yes">Follow system style</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">Default</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkCheckButton" id="light">
+                                <style>
+                                  <class name="style-selector"/>
+                                  <class name="light"/>
+                                </style>
+                                <property name="hexpand">True</property>
+                                <property name="halign">center</property>
+                                <property name="group">follow</property>
+                                <property name="focus-on-click">False</property>
+                                <property name="tooltip-text" translatable="yes">Light style</property>
+                                <signal name="notify::active" handler="on_check_active_changed_cb" object="ObsAppearancePage" swapped="no" />
+                                <accessibility>
+                                  <property name="label" translatable="yes">Light style</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">Light</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+
+                        <child>
+                          <object class="GtkBox">
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkCheckButton" id="dark">
+                                <style>
+                                  <class name="style-selector"/>
+                                  <class name="dark"/>
+                                </style>
+                                <property name="hexpand">True</property>
+                                <property name="halign">center</property>
+                                <property name="group">follow</property>
+                                <property name="focus-on-click">False</property>
+                                <property name="tooltip-text" translatable="yes">Dark style</property>
+                                <property name="active">True</property>
+                                <signal name="notify::active" handler="on_check_active_changed_cb" object="ObsAppearancePage" swapped="no" />
+                                <accessibility>
+                                  <property name="label" translatable="yes">Dark style</property>
+                                </accessibility>
+                              </object>
+                            </child>
+                            <child>
+                              <object class="GtkLabel">
+                                <property name="label">Dark</property>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <!-- Theme -->
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title">Style</property>
+
+            <child>
+              <object class="AdwPreferencesRow">
+                <property name="activatable">False</property>
+
+                <child>
+                  <object class="GtkBox">
+                    <property name="margin-top">24</property>
+                    <property name="margin-bottom">12</property>
+                    <property name="margin-start">24</property>
+                    <property name="margin-end">24</property>
+
+                    <child>
+                      <object class="GtkFlowBox" id="themes_flowbox">
+                        <property name="valign">start</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="homogeneous">True</property>
+                        <property name="selection-mode">browse</property>
+                        <property name="row-spacing">12</property>
+                        <property name="column-spacing">12</property>
+                        <property name="min-children-per-line">1</property>
+                        <property name="max-children-per-line">5</property>
+                        <signal name="selected-children-changed" handler="on_builtin_themes_flowbox_selected_changed_cb" />
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+</interface>

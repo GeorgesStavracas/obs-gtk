@@ -80,7 +80,6 @@ tags
 *.opensdf
 *.xml
 *.ipch
-*.css
 *.xslt
 *.aps
 *.suo
@@ -101,6 +100,9 @@ tags
 .DS_Store
 */.DS_Store
 */**/.DS_Store
+
+#gtk
+!src/obs.gresources.xml
 
 #flatpak
 /.flatpak-builder/

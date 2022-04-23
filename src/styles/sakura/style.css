@@ -1,0 +1,20 @@
+/* Default colors */
+
+@define-color pink_1 #fff2f5;
+@define-color pink_2 #fee2e7;
+@define-color pink_3 #fec1cd;
+@define-color pink_4 #feb1c0;
+@define-color pink_5 #ff7892;
+
+@define-color accent_color @pink_4;
+@define-color accent_fg_color #ffffff;
+@define-color accent_bg_color @pink_4;
+
+@define-color popover_bg_color @pink_1;
+@define-color window_bg_color @pink_1;
+@define-color view_bg_color @pink_1;
+@define-color headerbar_bg_color @pink_3;
+
+themecard {
+  background: linear-gradient(135deg, @pink_1 5%, @pink_4 100%);
+}

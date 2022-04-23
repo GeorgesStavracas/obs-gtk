@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/obsproject/Studio/GTK4/ui">
+    <file>audio/obs-audio-device-controls.ui</file>
+    <file>obs-activities-page.ui</file>
+    <file>obs-mixer-page.ui</file>
+    <file>obs-scene-editor.ui</file>
+    <file>obs-scenes-page.ui</file>
+    <file>obs-window.ui</file>
+    <file>preferences/obs-appearance-page.ui</file>
+    <file>preferences/obs-preferences-dialog.ui</file>
+    <file>preferences/obs-theme-card.ui</file>
+    <file>profiles/obs-profiles-dialog.ui</file>
+    <file>scenes/obs-collection-template-icon.ui</file>
+    <file>scenes/obs-new-collection-dialog.ui</file>
+  </gresource>
+
+  <!-- Styles -->
+  <gresource prefix="/com/obsproject/Studio/GTK4">
+    <file>styles/default/style.css</file>
+    <file>styles/default/style-dark.css</file>
+
+    <file>styles/sakura/style.css</file>
+    <file>styles/sakura/style-dark.css</file>
+
+    <file>style.css</file>
+    <file>style-dark.css</file>
+  </gresource>
+
+  <!-- Icons -->
+  <gresource prefix="/com/obsproject/Studio/GTK4/icons/scalable/actions">
+    <file alias="align-tool-symbolic.svg">icons/align-tool-symbolic.svg</file>
+    <file alias="axes-one-quadrant-symbolic.svg">icons/axes-one-quadrant-symbolic.svg</file>
+    <file alias="blend-tool-symbolic.svg">icons/blend-tool-symbolic.svg</file>
+    <file alias="bottom-symbolic.svg">icons/bottom-symbolic.svg</file>
+    <file alias="chat-symbolic.svg">icons/chat-symbolic.svg</file>
+    <file alias="down-symbolic.svg">icons/down-symbolic.svg</file>
+    <file alias="explore2-large-symbolic.svg">icons/explore2-large-symbolic.svg</file>
+    <file alias="flap-symbolic.svg">icons/flap-symbolic.svg</file>
+    <file alias="general-properties-symbolic.svg">icons/general-properties-symbolic.svg</file>
+    <file alias="group-symbolic.svg">icons/group-symbolic.svg</file>
+    <file alias="music-queue-symbolic.svg">icons/music-queue-symbolic.svg</file>
+    <file alias="sound-wave-symbolic.svg">icons/sound-wave-symbolic.svg</file>
+    <file alias="system-monitor-symbolic.svg">icons/system-monitor-symbolic.svg</file>
+    <file alias="top-symbolic.svg">icons/top-symbolic.svg</file>
+    <file alias="ungroup-symbolic.svg">icons/ungroup-symbolic.svg</file>
+    <file alias="up-symbolic.svg">icons/up-symbolic.svg</file>
+  </gresource>
+
+  <!-- Assets -->
+  <gresource prefix="/com/obsproject/Studio/GTK4">
+    <file>assets/collection-templates/empty.svg</file>
+    <file>assets/projects.svg</file>
+  </gresource>
+</gresources>

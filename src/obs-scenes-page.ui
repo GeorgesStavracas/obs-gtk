@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <requires lib="Panel" version="1.0"/>
+
+  <template class="ObsScenesPage" parent="AdwBin">
+
+    <child>
+      <object class="PanelDock" id="dock">
+        <property name="reveal-start">True</property>
+        <property name="reveal-bottom">True</property>
+        <property name="reveal-end">True</property>
+        <property name="start-width">250</property>
+        <property name="end-width">250</property>
+        <property name="vexpand">true</property>
+
+        <child>
+          <object class="GtkStack" id="stack">
+
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">empty</property>
+                <property name="child">
+                  <object class="AdwStatusPage">
+                    <property name="icon-name">music-queue-symbolic</property>
+                    <property name="title" translatable="yes">Scene Collections</property>
+                    <property name="description" translatable="yes">Create a new collection and start designing your scenes</property>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="halign">center</property>
+                        <property name="label" translatable="yes">Create Collection</property>
+                        <property name="action-name">scenes.new-collection</property>
+                        <style>
+                          <class name="suggested-action" />
+                          <class name="pill" />
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">collections</property>
+                <property name="child">
+                  <object class="GtkFlowBox">
+                    <property name="valign">start</property>
+                    <property name="selection-mode">none</property>
+                    <property name="row-spacing">24</property>
+                    <property name="column-spacing">24</property>
+
+                    <!-- New Project -->
+                    <child>
+                      <object class="GtkFlowBoxChild" id="new_project_child">
+                        <child>
+                          <object class="GtkImage">
+                            <property name="icon-name">list-add-symbolic</property>
+                            <property name="pixel-size">96</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkStackPage">
+                <property name="name">editor</property>
+                <property name="child">
+                  <object class="ObsSceneEditor">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+</interface>

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <requires lib="Panel" version="1.0"/>
+
+  <template class="ObsMixerPage" parent="AdwBin">
+
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="vscrollbar-policy">never</property>
+
+        <child>
+          <object class="GtkListView" id="listview">
+            <property name="orientation">horizontal</property>
+            <property name="model">
+              <object class="GtkNoSelection" id="no_selection_model" />
+            </property>
+            <property name="factory">
+              <object class="GtkBuilderListItemFactory">
+                <property name="bytes">
+<![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GtkListItem">
+    <property name="activatable">False</property>
+    <property name="child">
+      <object class="ObsAudioDeviceControls">
+        <binding name="audio-device">
+          <lookup name="item">GtkListItem</lookup>
+        </binding>
+      </object>
+    </property>
+  </template>
+</interface>
+]]>
+                </property>
+              </object>
+            </property>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+</interface>

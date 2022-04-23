@@ -1,0 +1,13 @@
+/* Default colors */
+@define-color accent_color #365cc0;
+@define-color accent_fg_color #ffffff;
+@define-color accent_bg_color #284cb8;
+
+@define-color error_color #d12a3e;
+@define-color error_bg_color #d12a3e;
+
+/* Theme preview */
+
+themecard {
+  background: linear-gradient(135deg,  @window_bg_color 5%, @accent_color 100%);
+}

@@ -126,6 +126,18 @@ extern bool device_is_present_ready(gs_device_t *device)
 	return true;
 }
 
+extern bool device_swapchain_acquire_texture(gs_swapchain_t *swap,
+					     struct gs_display_texture *texture)
+{
+	return gl_vtable->device_swapchain_acquire_texture(swap, texture);
+}
+
+extern void device_swapchain_release_texture(gs_swapchain_t *swap,
+					     struct gs_display_texture *texture)
+{
+	gl_vtable->device_swapchain_release_texture(swap, texture);
+}
+
 extern void device_present(gs_device_t *device)
 {
 	gl_vtable->device_present(device);
