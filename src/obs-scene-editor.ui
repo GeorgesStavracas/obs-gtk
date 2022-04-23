@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="ObsSceneEditor" parent="GtkWidget">
+
+    <child>
+      <object class="GtkBox" id="main_box">
+        <property name="orientation">vertical</property>
+
+        <child>
+          <object class="GtkOverlay">
+
+            <child>
+              <object class="ObsDisplayWidget" id="display_widget">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+              </object>
+            </child>
+
+            <!-- Zoom -->
+            <child type="overlay">
+              <object class="GtkBox">
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="halign">end</property>
+                <property name="valign">end</property>
+                <property name="orientation">vertical</property>
+                <style>
+                  <class name="toolbar" />
+                </style>
+
+                <child>
+                  <object class="GtkRevealer">
+                    <property name="reveal-child" bind-source="zoom_toggle_button" bind-property="active" bind-flags="sync-create" />
+                    <child>
+                      <object class="GtkSpinButton">
+                        <property name="orientation">vertical</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkToggleButton" id="zoom_toggle_button">
+                    <property name="icon-name">zoom-in-symbolic</property>
+                    <style>
+                      <class name="osd" />
+                    </style>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparator" />
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <style>
+              <class name="toolbar" />
+            </style>
+
+            <!-- Regular actions -->
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">edit-cut-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Cut</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">edit-copy-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Copy</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">edit-paste-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Paste</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <style>
+                  <class name="spacer" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">top-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Move to top</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">up-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Move one layer up</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">down-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Move one layer down</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">bottom-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Move to the bottom</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">group-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Group scenes</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="icon-name">ungroup-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Ungroup scenes</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <style>
+                  <class name="spacer" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkMenuButton">
+                <property name="icon-name">blend-tool-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Blend mode</property>
+                <property name="direction">up</property>
+                <property name="menu-model">blend-mode-menu</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkMenuButton">
+                <property name="icon-name">align-tool-symbolic</property>
+                <property name="tooltip-text" translatable="yes">Alignment</property>
+                <property name="direction">up</property>
+                <property name="menu-model">align-menu</property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkSeparator">
+                <property name="hexpand">True</property>
+                <style>
+                  <class name="spacer" />
+                </style>
+              </object>
+            </child>
+
+            <!-- Snapping -->
+            <child>
+              <object class="GtkBox">
+                <style>
+                  <class name="linked" />
+                </style>
+
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="icon-name">align-tool-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Snap to edges</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="icon-name">axes-one-quadrant-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Snap to center lines</property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkToggleButton">
+                    <property name="icon-name">flap-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Snap to other sources</property>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparator" />
+        </child>
+
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="vscrollbar-policy">never</property>
+
+            <child>
+              <object class="GtkFlowBox">
+                <property name="orientation">vertical</property>
+                <property name="min-children-per-line">1</property>
+                <property name="max-children-per-line">1</property>
+                <property name="height-request">100</property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+  <menu id="blend-mode-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Darken</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Exclusion</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Lighten</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Multiply</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Normal (default)</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Saturate</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Screen</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <menu id="align-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Edit transform…</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Rotate 90 degrees clockwise</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Rotate 90 degrees counterclockwise</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Rotate 180 degrees</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Flip horizontally</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Flip vertically</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Fit to screen</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Expand to screen</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Center to screen</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Center horizontally</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Center vertically</attribute>
+      </item>
+    </section>
+  </menu>
+
+</interface>

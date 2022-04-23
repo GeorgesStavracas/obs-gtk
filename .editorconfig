@@ -29,3 +29,13 @@ indent_size = 2
 [cmake/**/*.cmake]
 indent_style = space
 indent_size = 2
+
+[*.ui]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+[*.css]
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2

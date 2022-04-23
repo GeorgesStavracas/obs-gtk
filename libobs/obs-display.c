@@ -311,3 +311,36 @@ void obs_display_size(obs_display_t *display, uint32_t *width, uint32_t *height)
 		pthread_mutex_unlock(&display->draw_info_mutex);
 	}
 }
+
+bool obs_display_acquire_texture(obs_display_t *display, struct gs_display_texture *texture)
+{
+	bool result;
+
+	if (!display)
+		return false;
+
+	obs_enter_graphics();
+	pthread_mutex_lock(&display->draw_info_mutex);
+
+	result = gs_swapchain_acquire_texture(display->swap, texture);
+
+	pthread_mutex_unlock(&display->draw_info_mutex);
+	obs_leave_graphics();
+
+	return result;
+}
+
+void obs_display_release_texture(obs_display_t *display,
+				 struct gs_display_texture *texture)
+{
+	if (!display)
+		return;
+
+	obs_enter_graphics();
+	pthread_mutex_lock(&display->draw_info_mutex);
+
+	gs_swapchain_release_texture(display->swap, texture);
+
+	pthread_mutex_unlock(&display->draw_info_mutex);
+	obs_leave_graphics();
+}

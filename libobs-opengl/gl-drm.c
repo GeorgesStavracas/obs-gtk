@@ -21,6 +21,7 @@
 #include <fcntl.h>
 #include <gbm.h>
 #include <glad/glad_egl.h>
+#include <unistd.h>
 #include <xf86drm.h>
 
 static const EGLint ctx_attribs[] = {
@@ -60,11 +61,13 @@ static const EGLint config_attribs[] = {
 };
 
 struct gl_windowinfo {
+	enum gs_display_render_mode render_mode;
 	uint32_t width;
 	uint32_t height;
 
 	struct gbm_surface *gbm_surface;
 	EGLSurface *egl_surface;
+	struct gbm_bo *front_bo;
 };
 
 struct gl_platform {
@@ -148,7 +151,13 @@ gl_drm_windowinfo_create(const struct gs_init_data *init_data)
 		return NULL;
 	}
 
+	if (init_data->render_mode == GS_DISPLAY_RENDER_MODE_ONSCREEN) {
+		blog(LOG_ERROR, "DRM renderer only supports shared textures");
+		return NULL;
+	}
+
 	wi = bmalloc(sizeof(struct gl_windowinfo));
+	wi->render_mode = init_data->render_mode;
 	wi->width = init_data->cx;
 	wi->height = init_data->cy;
 
@@ -255,9 +264,11 @@ static bool gl_drm_platform_init_swapchain(struct gs_swap_chain *swap)
 	struct gl_windowinfo *wi = swap->wi;
 	struct gl_platform *plat = swap->device->plat;
 
-	wi->gbm_surface = gbm_surface_create(plat->gbm, wi->width, wi->height,
-					     GBM_FORMAT_ARGB8888,
-					     GBM_BO_USE_RENDERING);
+	wi->gbm_surface = gbm_surface_create_with_modifiers2(plat->gbm,
+							     wi->width, wi->height,
+							     GBM_FORMAT_ARGB8888,
+							     NULL, 0,
+							     GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
 	if (!wi->gbm_surface) {
 		blog(LOG_ERROR,
 		     "[drm] Failed to initialize swapchain: failed to create gbm_surface");
@@ -364,13 +375,73 @@ static void gl_drm_device_load_swapchain(gs_device_t *device,
 				 EGL_NO_CONTEXT);
 }
 
+static bool gl_drm_device_swapchain_acquire_texture(gs_swapchain_t *swap,
+						    struct gs_display_texture *texture)
+{
+	struct gl_platform *plat = swap->device->plat;
+	struct gl_windowinfo *wi = swap->wi;
+	int drm_format;
+	int n_planes;
+
+	if (swap->wi->render_mode == GS_DISPLAY_RENDER_MODE_ONSCREEN)
+		return false;
+
+	assert(wi->front_bo == NULL);
+
+	wi->front_bo = gbm_surface_lock_front_buffer(wi->gbm_surface);
+
+	if (!wi->front_bo)
+		return false;
+
+	texture->dmabuf.width = gbm_bo_get_width(wi->front_bo);
+	texture->dmabuf.height = gbm_bo_get_height(wi->front_bo);
+	texture->dmabuf.n_planes = gbm_bo_get_plane_count(wi->front_bo);
+	texture->dmabuf.drm_format = gbm_bo_get_format(wi->front_bo);
+
+	n_planes = texture->dmabuf.n_planes;
+	texture->dmabuf.fds = bzalloc(sizeof(int) * n_planes);
+	texture->dmabuf.offsets = bzalloc(sizeof(uint32_t) * n_planes);
+	texture->dmabuf.strides = bzalloc(sizeof(uint32_t) * n_planes);
+	texture->dmabuf.modifiers = bzalloc(sizeof(uint64_t) * n_planes);
+
+	for (int i = 0; i < n_planes; i++) {
+		texture->dmabuf.fds[i] = gbm_bo_get_fd_for_plane(wi->front_bo, i);
+		texture->dmabuf.offsets[i] = gbm_bo_get_offset(wi->front_bo, i);
+		texture->dmabuf.strides[i] = gbm_bo_get_stride_for_plane(wi->front_bo, i);
+		texture->dmabuf.modifiers[i] = gbm_bo_get_modifier(wi->front_bo);
+	}
+
+	return true;
+}
+
+static void gl_drm_device_swapchain_release_texture(gs_swapchain_t *swap,
+						    struct gs_display_texture *texture)
+{
+	struct gl_platform *plat = swap->device->plat;
+	struct gl_windowinfo *wi = swap->wi;
+
+	assert(wi->render_mode == GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE);
+	assert(wi->front_bo != NULL);
+
+	gbm_surface_release_buffer(wi->gbm_surface, wi->front_bo);
+	wi->front_bo = NULL;
+
+	for (uint32_t i = 0; i < texture->dmabuf.n_planes; i++)
+		close(texture->dmabuf.fds[i]);
+
+	bfree(texture->dmabuf.fds);
+	bfree(texture->dmabuf.offsets);
+	bfree(texture->dmabuf.strides);
+	bfree(texture->dmabuf.modifiers);
+}
+
 static void gl_drm_device_present(gs_device_t *device)
 {
 	struct gl_platform *plat = device->plat;
 	struct gl_windowinfo *wi = device->cur_swap->wi;
 
 	if (eglSwapBuffers(plat->egl_display, wi->egl_surface) == EGL_FALSE)
-		blog(LOG_ERROR, "[drm] eglSwapBuffers failed");
+		blog(LOG_ERROR, "[drm] eglSwapBuffers failed: %s", gl_egl_error_to_string(eglGetError()));
 }
 
 static struct gs_texture *gl_drm_device_texture_create_from_dmabuf(
@@ -433,6 +504,10 @@ static const struct gl_winsys_vtable gl_drm_winsys_vtable = {
 	.clear_context = gl_drm_clear_context,
 	.update = gl_drm_update,
 	.device_load_swapchain = gl_drm_device_load_swapchain,
+	.device_swapchain_acquire_texture =
+		gl_drm_device_swapchain_acquire_texture,
+	.device_swapchain_release_texture =
+		gl_drm_device_swapchain_release_texture,
 	.device_present = gl_drm_device_present,
 	.device_texture_create_from_dmabuf =
 		gl_drm_device_texture_create_from_dmabuf,
