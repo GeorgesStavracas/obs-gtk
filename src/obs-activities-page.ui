@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <requires lib="Panel" version="1.0"/>
+
+  <template class="ObsActivitiesPage" parent="AdwBin">
+
+    <child>
+      <object class="PanelDock" id="dock">
+        <property name="reveal-start">True</property>
+        <property name="reveal-bottom">True</property>
+        <property name="reveal-end">True</property>
+        <property name="start-width">250</property>
+        <property name="end-width">250</property>
+        <property name="vexpand">true</property>
+
+        <child>
+          <object class="PanelGrid" id="grid">
+          </object>
+        </child>
+
+        <child type="start">
+          <object class="PanelPaned">
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="PanelFrame">
+                <property name="orientation">vertical</property>
+
+                <child>
+                  <object class="PanelWidget">
+                    <property name="icon-name">general-properties-symbolic</property>
+                    <property name="title">Profile</property>
+                    <property name="can-maximize">True</property>
+                    <child>
+                      <object class="AdwBin">
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child type="end">
+          <object class="PanelPaned">
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="PanelFrame">
+                <property name="orientation">vertical</property>
+
+                <child>
+                  <object class="PanelWidget">
+                    <property name="icon-name">chat-symbolic</property>
+                    <property name="title">Chat</property>
+                    <property name="can-maximize">True</property>
+                    <child>
+                      <object class="AdwBin">
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+</interface>

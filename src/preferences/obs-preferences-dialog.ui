@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="ObsPreferencesDialog" parent="AdwWindow">
+    <property name="title" translatable="yes">Preferences</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
+    <style>
+      <class name="preferences-dialog" />
+    </style>
+
+    <child>
+      <object class="GtkBox">
+
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="AdwHeaderBar">
+                <property name="show-start-title-buttons">True</property>
+                <property name="show-end-title-buttons">False</property>
+                <property name="title-widget">
+                  <object class="AdwWindowTitle">
+                    <property name="title" translatable="yes">Settings</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkStackSidebar">
+                <property name="stack">main_stack</property>
+                <property name="vexpand">True</property>
+                <property name="width-request">200</property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <property name="orientation">vertical</property>
+
+            <child>
+              <object class="AdwHeaderBar">
+                <property name="show-start-title-buttons">False</property>
+                <property name="show-end-title-buttons">True</property>
+                <property name="title-widget">
+                  <object class="AdwWindowTitle">
+                    <property name="title" translatable="yes"></property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkStack" id="main_stack">
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="vhomogeneous">False</property>
+                <property name="transition-type">crossfade</property>
+
+                <!-- TODO: General -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">general</property>
+                    <property name="title" translatable="yes">General</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- Appearance -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">appearance</property>
+                    <property name="title" translatable="yes">Appearance</property>
+                    <property name="child">
+                      <object class="ObsAppearancePage" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- TODO: Scene Editor -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">scene-editor</property>
+                    <property name="title" translatable="yes">Scene Editor</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- TODO: Keyboard Shortcuts -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">shortcuts</property>
+                    <property name="title" translatable="yes">Keyboard Shortcuts</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- TODO: Audio -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">audio</property>
+                    <property name="title" translatable="yes">Audio</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- TODO: Video -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">video</property>
+                    <property name="title" translatable="yes">Video</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+                <!-- TODO: Video -->
+                <child>
+                  <object class="GtkStackPage">
+                    <property name="name">network</property>
+                    <property name="title" translatable="yes">Network</property>
+                    <property name="child">
+                      <object class="AdwBin" />
+                    </property>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+</interface>

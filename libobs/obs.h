@@ -966,6 +966,12 @@ EXPORT void obs_display_set_background_color(obs_display_t *display,
 EXPORT void obs_display_size(obs_display_t *display, uint32_t *width,
 			     uint32_t *height);
 
+EXPORT bool obs_display_acquire_texture(obs_display_t *display,
+                                        struct gs_display_texture *texture);
+
+EXPORT void obs_display_release_texture(obs_display_t *display,
+                                        struct gs_display_texture *texture);
+
 /* ------------------------------------------------------------------------- */
 /* Sources */
 

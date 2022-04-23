@@ -22,6 +22,7 @@
 
 #include "gl-egl-common.h"
 
+#include <glad/glad.h>
 #include <glad/glad_egl.h>
 
 static const EGLint config_attribs_native[] = {EGL_SURFACE_TYPE,
@@ -80,9 +81,20 @@ static const EGLint khr_ctx_attribs[] = {
 	3,
 	EGL_NONE};
 
+#define N_TEXTURES 2
+
 struct gl_windowinfo {
+	enum gs_display_render_mode render_mode;
 	struct wl_egl_window *window;
 	EGLSurface egl_surface;
+	GLuint framebuffer;
+	struct {
+		GLuint gl[N_TEXTURES];
+		EGLImage egl[N_TEXTURES];
+	} tex;
+	int current_tex;
+	uint32_t width;
+	uint32_t height;
 };
 
 struct gl_platform {
@@ -95,21 +107,31 @@ struct gl_platform {
 struct gl_windowinfo *
 gl_wayland_egl_windowinfo_create(const struct gs_init_data *info)
 {
-	struct wl_egl_window *window =
-		wl_egl_window_create(info->window.display, info->cx, info->cy);
-	if (window == NULL) {
-		blog(LOG_ERROR, "wl_egl_window_create failed");
-		return NULL;
+	struct gl_windowinfo *wi = bmalloc(sizeof(struct gl_windowinfo));
+
+	wi->render_mode = info->render_mode;
+
+	switch (info->render_mode) {
+	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
+		wi->window = wl_egl_window_create(info->window.display, info->cx, info->cy);
+		if (wi->window == NULL) {
+			blog(LOG_ERROR, "wl_egl_window_create failed");
+			bfree(wi);
+			return NULL;
+		}
+		break;
+
+	case GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE:
+		break;
 	}
 
-	struct gl_windowinfo *wi = bmalloc(sizeof(struct gl_windowinfo));
-	wi->window = window;
 	return wi;
 }
 
 static void gl_wayland_egl_windowinfo_destroy(struct gl_windowinfo *info)
 {
-	wl_egl_window_destroy(info->window);
+	if (info->window)
+		wl_egl_window_destroy(info->window);
 	bfree(info);
 }
 
@@ -147,7 +169,9 @@ static bool egl_context_create(struct gl_platform *plat, const EGLint *attribs)
 		result = eglChooseConfig(plat->display, config_attribs,
 					 &plat->config, 1, &num_config);
 		if (result != EGL_TRUE || num_config == 0) {
-			blog(LOG_ERROR, "eglChooseConfig failed");
+			blog(LOG_ERROR, "eglChooseConfig failed: %s (result: %d, n configs: %d)",
+			     gl_egl_error_to_string(eglGetError()),
+			     result, num_config);
 			goto error;
 		}
 	}
@@ -260,13 +284,43 @@ static void gl_wayland_egl_platform_destroy(struct gl_platform *plat)
 static bool gl_wayland_egl_platform_init_swapchain(struct gs_swap_chain *swap)
 {
 	struct gl_platform *plat = swap->device->plat;
-	EGLSurface egl_surface = eglCreateWindowSurface(
-		plat->display, plat->config, swap->wi->window, NULL);
-	if (egl_surface == EGL_NO_SURFACE) {
-		blog(LOG_ERROR, "eglCreateWindowSurface failed");
-		return false;
+
+	switch(swap->wi->render_mode) {
+	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
+		swap->wi->egl_surface = eglCreateWindowSurface(
+			plat->display, plat->config, swap->wi->window, NULL);
+		if (swap->wi->egl_surface == EGL_NO_SURFACE) {
+			blog(LOG_ERROR, "eglCreateWindowSurface failed");
+			return false;
+		}
+		break;
+
+	case GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE:
+		swap->wi->egl_surface = EGL_NO_SURFACE;
+
+		glGenFramebuffers(1, &swap->wi->framebuffer);
+		glBindFramebuffer(GL_FRAMEBUFFER, swap->wi->framebuffer);
+
+		glGenTextures(1, &swap->wi->tex.gl[0]);
+		glBindTexture(GL_TEXTURE_2D, swap->wi->tex.gl[0]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		swap->wi->tex.egl[0] = eglCreateImage(plat->display,
+						      plat->context,
+						      EGL_GL_TEXTURE_2D,
+						      (EGLClientBuffer)(uint64_t)swap->wi->tex.gl[0],
+						      NULL);
+
+		glGenTextures(1, &swap->wi->tex.gl[1]);
+		glBindTexture(GL_TEXTURE_2D, swap->wi->tex.gl[1]);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+		swap->wi->tex.egl[1] = eglCreateImage(plat->display,
+						      plat->context,
+						      EGL_GL_TEXTURE_2D,
+						      (EGLClientBuffer)(uint64_t)swap->wi->tex.gl[1],
+						      NULL);
+		break;
 	}
-	swap->wi->egl_surface = egl_surface;
+
 	return true;
 }
 
@@ -300,8 +354,17 @@ static void *gl_wayland_egl_device_get_device_obj(gs_device_t *device)
 static void gl_wayland_egl_getclientsize(const struct gs_swap_chain *swap,
 					 uint32_t *width, uint32_t *height)
 {
-	wl_egl_window_get_attached_size(swap->wi->window, (void *)width,
-					(void *)height);
+	switch(swap->wi->render_mode) {
+	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
+		wl_egl_window_get_attached_size(swap->wi->window, (void *)width,
+						(void *)height);
+		break;
+
+	case GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE:
+		*width = swap->wi->width;
+		*height = swap->wi->height;
+		break;
+	}
 }
 
 static void gl_wayland_egl_clear_context(gs_device_t *device)
@@ -312,9 +375,21 @@ static void gl_wayland_egl_clear_context(gs_device_t *device)
 
 static void gl_wayland_egl_update(gs_device_t *device)
 {
-	wl_egl_window_resize(device->cur_swap->wi->window,
-			     device->cur_swap->info.cx,
-			     device->cur_swap->info.cy, 0, 0);
+	struct gs_swap_chain *swap = device->cur_swap;
+	struct gl_platform *plat = device->plat;
+
+	blog(LOG_INFO, "Resizing swapchain");
+
+	switch(swap->wi->render_mode) {
+	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
+		wl_egl_window_resize(device->cur_swap->wi->window,
+				     device->cur_swap->info.cx,
+				     device->cur_swap->info.cy, 0, 0);
+		break;
+
+	case GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE:
+		break;
+	}
 }
 
 static void gl_wayland_egl_device_load_swapchain(gs_device_t *device,
@@ -329,20 +404,90 @@ static void gl_wayland_egl_device_load_swapchain(gs_device_t *device,
 	if (swap == NULL) {
 		egl_make_current(plat->display, EGL_NO_SURFACE, EGL_NO_CONTEXT);
 	} else {
+		blog(LOG_INFO, "Loading swapchain");
 		egl_make_current(plat->display, swap->wi->egl_surface,
 				 plat->context);
 	}
+}
+
+static bool gl_wayland_egl_device_swapchain_acquire_texture(gs_swapchain_t *swap,
+							    struct gs_display_texture *texture)
+{
+	struct gl_platform *plat = swap->device->plat;
+	int drm_format;
+	int n_planes;
+
+	if (swap->wi->render_mode == GS_DISPLAY_RENDER_MODE_ONSCREEN)
+		return false;
+
+	return false;
+
+#if 0
+
+	eglExportDMABUFImageQueryMESA(plat->display,
+				      EGL_NO_IMAGE,
+				      &drm_format,
+				      &n_planes,
+				      NULL);
+
+	texture->dmabuf.width = swap->wi->width;
+	texture->dmabuf.height = swap->wi->height;
+	texture->dmabuf.n_planes = n_planes;
+	texture->dmabuf.drm_format = drm_format;
+	texture->dmabuf.fds = bzalloc(sizeof(int) * n_planes);
+	texture->dmabuf.offsets = bzalloc(sizeof(uint32_t) * n_planes);
+	texture->dmabuf.strides = bzalloc(sizeof(uint32_t) * n_planes);
+	texture->dmabuf.modifiers = bzalloc(sizeof(uint64_t) * n_planes);
+
+	eglExportDMABUFImageQueryMESA(plat->display,
+				      EGL_NO_IMAGE, // TODO
+				      NULL,
+				      NULL,
+				      texture->dmabuf.modifiers);
+
+	eglExportDMABUFImageMESA(plat->display,
+				 EGL_NO_IMAGE,
+				 texture->dmabuf.fds,
+				 (EGLint*)texture->dmabuf.strides,
+				 (EGLint*)texture->dmabuf.offsets);
+
+	return true;
+#endif
+}
+
+static void gl_wayland_egl_device_swapchain_release_texture(gs_swapchain_t *swap,
+							    struct gs_display_texture *texture)
+{
+	struct gl_platform *plat = swap->device->plat;
+
+	assert (swap->wi->render_mode == GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE);
+#if 0
+	bfree(texture->dmabuf.fds);
+	bfree(texture->dmabuf.offsets);
+	bfree(texture->dmabuf.strides);
+	bfree(texture->dmabuf.modifiers);
+#endif
 }
 
 static void gl_wayland_egl_device_present(gs_device_t *device)
 {
 	struct gl_platform *plat = device->plat;
 	struct gl_windowinfo *wi = device->cur_swap->wi;
-	if (eglSwapInterval(plat->display, 0) == EGL_FALSE) {
-		blog(LOG_ERROR, "eglSwapInterval failed");
-	}
-	if (eglSwapBuffers(plat->display, wi->egl_surface) == EGL_FALSE) {
-		blog(LOG_ERROR, "eglSwapBuffers failed");
+
+	switch (wi->render_mode) {
+	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
+		if (eglSwapInterval(plat->display, 0) == EGL_FALSE) {
+			blog(LOG_ERROR, "eglSwapInterval failed: %s",
+			     gl_egl_error_to_string(eglGetError()));
+		}
+		if (eglSwapBuffers(plat->display, wi->egl_surface) == EGL_FALSE) {
+			blog(LOG_ERROR, "eglSwapBuffers failed: %s",
+			     gl_egl_error_to_string(eglGetError()));
+		}
+		break;
+	case GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE:
+		wi->current_tex = (wi->current_tex + 1) % N_TEXTURES;
+		break;
 	}
 }
 
@@ -407,6 +552,10 @@ static const struct gl_winsys_vtable egl_wayland_winsys_vtable = {
 	.clear_context = gl_wayland_egl_clear_context,
 	.update = gl_wayland_egl_update,
 	.device_load_swapchain = gl_wayland_egl_device_load_swapchain,
+	.device_swapchain_acquire_texture =
+		gl_wayland_egl_device_swapchain_acquire_texture,
+	.device_swapchain_release_texture =
+		gl_wayland_egl_device_swapchain_release_texture,
 	.device_present = gl_wayland_egl_device_present,
 	.device_texture_create_from_dmabuf =
 		gl_wayland_egl_device_texture_create_from_dmabuf,

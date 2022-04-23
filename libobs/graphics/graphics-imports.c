@@ -94,6 +94,8 @@ bool load_graphics_imports(struct gs_exports *exports, void *module,
 	GRAPHICS_IMPORT(device_begin_scene);
 	GRAPHICS_IMPORT(device_draw);
 	GRAPHICS_IMPORT(device_load_swapchain);
+	GRAPHICS_IMPORT_OPTIONAL(device_swapchain_acquire_texture);
+	GRAPHICS_IMPORT_OPTIONAL(device_swapchain_release_texture);
 	GRAPHICS_IMPORT(device_end_scene);
 	GRAPHICS_IMPORT(device_clear);
 	GRAPHICS_IMPORT(device_is_present_ready);

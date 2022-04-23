@@ -123,6 +123,7 @@ foreach(component "Client" "Server" "EGL" "Cursor")
         Wayland::${component}
         PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
                    "${WAYLAND_${component_u}_INCLUDE_DIRS}")
+      target_link_libraries(Wayland::${component} INTERFACE ${WAYLAND_LIBRARIES})
 
       set_target_properties(
         Wayland::${component} PROPERTIES INTERFACE_COMPILE_OPTIONS

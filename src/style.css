@@ -1,0 +1,190 @@
+/* Header buttons */
+
+button.stream-button:checked {
+  color: @accent_fg_color;
+  background-color: @accent_bg_color;
+}
+
+button.record-button:checked {
+  color: @destructive_fg_color;
+  background-color: @destructive_bg_color;
+}
+
+button.virtual-camera:checked {
+  color: @success_fg_color;
+  background-color: @success_bg_color;
+}
+
+/* New collection dialog */
+
+window.new-collection-dialog flowbox {
+  padding: 12px;
+}
+
+collectiontemplateicon {
+  border-radius: 11px;
+  border: 3px solid transparent;
+  outline-offset: -6px;
+  min-width: 160px;
+  min-height: 160px;
+  background: transparent;
+  transition-duration: 200ms;
+}
+
+collectiontemplateicon:hover {
+  border-color: alpha(@accent_color, 0.30);
+  background-color: alpha(@accent_bg_color, 0.15);
+  transition-duration: 200ms;
+}
+
+collectiontemplateicon:selected {
+  border-color: @accent_color;
+  background-color: alpha(@accent_bg_color, 0.20);
+  transition-duration: 200ms;
+}
+
+/* Volume */
+
+@define-color volumebar_silent_color @dark_1;
+@define-color volumebar_nominal_color @green_4;
+@define-color volumebar_warning_color @yellow_5;
+@define-color volumebar_error_color @red_3;
+@define-color volumebar_clip_color @red_5;
+
+audiocontrols scale {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+
+audiocontrols scale > trough {
+	min-width: 4px;
+}
+
+audiocontrols scale > trough > slider {
+	min-width: 8px;
+	border-radius: 2px;
+	margin-left: -4px;
+	margin-right: -4px;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+audiocontrols volumebar levelbar.vertical {
+  border-radius: 99px;
+  background: linear-gradient(0deg,
+                              alpha(@volumebar_silent_color, 0.2)  0%,
+                              alpha(@volumebar_silent_color, 0.2)  16%,
+                              alpha(@volumebar_nominal_color, 0.2) 16%,
+                              alpha(@volumebar_nominal_color, 0.2) 66%,
+                              alpha(@volumebar_warning_color, 0.2) 66%,
+                              alpha(@volumebar_warning_color, 0.2) 85%,
+                              alpha(@volumebar_error_color, 0.2)   85%,
+                              alpha(@volumebar_error_color, 0.2)   100%);
+}
+
+audiocontrols volumebar levelbar trough block.empty {
+  background-color: transparent;
+}
+
+audiocontrols volumebar levelbar trough block.filled.silent {
+  background-color: @volumebar_silent_color;
+}
+
+audiocontrols volumebar levelbar trough block.filled.nominal {
+  background-color: @volumebar_nominal_color;
+}
+
+audiocontrols volumebar levelbar trough block.filled.warning {
+  background-color: @volumebar_warning_color;
+}
+
+audiocontrols volumebar levelbar trough block.filled.error {
+  background-color: @volumebar_error_color;
+}
+
+audiocontrols volumebar levelbar trough block.filled.clip {
+  background-color: @volumebar_clip_color;
+}
+
+audiocontrols.muted volumebar {
+	filter: grayscale(100%) brightness(80%);
+}
+
+audiocontrols volumebar magnitude {
+  background-color: alpha(black, 0.5);
+  min-width: 3px;
+  min-height: 3px;
+}
+
+/* Color Scheme */
+
+colorschemeselector {
+  margin: 9px;
+}
+
+colorschemeselector checkbutton {
+  padding: 0;
+  min-height: 64px;
+  min-width: 64px;
+  padding: 1px;
+  background-clip: content-box;
+  border-radius: 9999px;
+  box-shadow: inset 0 0 0 1px @borders;
+}
+
+colorschemeselector checkbutton.follow:checked,
+colorschemeselector checkbutton.light:checked,
+colorschemeselector checkbutton.dark:checked {
+  box-shadow: inset 0 0 0 2px @theme_selected_bg_color;
+}
+
+colorschemeselector checkbutton.follow {
+  background-image: linear-gradient(to bottom right, #fff 49.99%, #202020 50.01%);
+}
+
+colorschemeselector checkbutton.light {
+  background-color: #fff;
+}
+
+colorschemeselector checkbutton.dark {
+  background-color: #202020;
+}
+
+colorschemeselector checkbutton radio {
+  -gtk-icon-source: none;
+  border: none;
+  background: none;
+  box-shadow: none;
+  min-width: 12px;
+  min-height: 12px;
+  transform: translate(48px, 24px);
+  padding: 2px;
+}
+
+checkbutton.style-selector radio:checked {
+  -gtk-icon-source: -gtk-icontheme("object-select-symbolic");
+  background-color: @theme_selected_bg_color;
+  color: @theme_selected_fg_color;
+}
+
+/* Themes */
+
+themepreviewcard overlay {
+  min-width: 192px;
+  min-height: 118px;
+}
+
+themepreviewcard overlay image.selected-icon {
+  min-width: 24px;
+  min-height: 24px;
+  margin: 6px;
+  border-radius: 50%;
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+  border: solid 2px @borders;
+  opacity: 0;
+}
+
+themepreviewcard:selected overlay image.selected-icon {
+  opacity: 1;
+}

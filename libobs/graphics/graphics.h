@@ -499,6 +499,11 @@ gs_texrender_get_format(const gs_texrender_t *texrender);
 #define GS_ERROR_MODULE_NOT_FOUND -2
 #define GS_ERROR_NOT_SUPPORTED -3
 
+enum gs_display_render_mode {
+	GS_DISPLAY_RENDER_MODE_ONSCREEN,
+	GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE,
+};
+
 struct gs_window {
 #if defined(_WIN32)
 	void *hwnd;
@@ -517,7 +522,27 @@ struct gs_init_data {
 	uint32_t num_backbuffers;
 	enum gs_color_format format;
 	enum gs_zstencil_format zsformat;
+	enum gs_display_render_mode render_mode;
 	uint32_t adapter;
+};
+
+struct gs_display_texture {
+#if defined(_WIN32)
+	void *hwnd;
+#elif defined(__APPLE__)
+	void *iosurf
+#elif defined(__linux__) || defined(__FreeBSD__)
+	struct {
+		unsigned int width;
+		unsigned int height;
+		uint32_t drm_format;
+		uint32_t n_planes;
+		int *fds;
+		uint32_t *strides;
+		uint32_t *offsets;
+		uint64_t *modifiers;
+	} dmabuf;
+#endif
 };
 
 #define GS_DEVICE_OPENGL 1
@@ -740,6 +765,10 @@ EXPORT void gs_end_scene(void);
 #define GS_CLEAR_STENCIL (1 << 2)
 
 EXPORT void gs_load_swapchain(gs_swapchain_t *swapchain);
+EXPORT bool gs_swapchain_acquire_texture(gs_swapchain_t *swapchain,
+					 struct gs_display_texture *texture);
+EXPORT void gs_swapchain_release_texture(gs_swapchain_t *swapchain,
+					 struct gs_display_texture *texture);
 EXPORT void gs_clear(uint32_t clear_flags, const struct vec4 *color,
 		     float depth, uint8_t stencil);
 EXPORT bool gs_is_present_ready(void);

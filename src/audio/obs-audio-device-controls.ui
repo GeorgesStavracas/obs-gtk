@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="ObsAudioDeviceControls" parent="AdwBin">
+
+    <child>
+      <object class="GtkBox">
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="orientation">vertical</property>
+
+        <child>
+          <object class="GtkBox">
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="hexpand">True</property>
+                <property name="label">TODO: effects</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <property name="vexpand">True</property>
+            <property name="margin-top">12</property>
+            <property name="margin-bottom">12</property>
+            <property name="margin-start">12</property>
+            <property name="margin-end">12</property>
+            <property name="spacing">12</property>
+
+            <!-- Volume Bars -->
+            <child>
+              <object class="GtkBox">
+                <property name="halign">end</property>
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+
+                <child>
+                  <object class="GtkBox">
+
+                    <!-- Volume Bars -->
+                    <child>
+                      <object class="GtkBox" id="volume_meters_box">
+                        <property name="spacing">3</property>
+                      </object>
+                    </child>
+
+                    <!-- Volume Ticks -->
+                    <child>
+                      <object class="GtkBox" id="volume_ticks_box">
+                        <property name="margin-start">2</property>
+                        <property name="orientation">vertical</property>
+                      </object>
+                    </child>
+
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkToggleButton" id="muted_button">
+                    <property name="halign">center</property>
+                    <property name="icon-name">audio-volume-high-symbolic</property>
+                    <style>
+                      <class name="flat" />
+                      <class name="circular" />
+                    </style>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkBox">
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">12</property>
+
+                <!-- Volume -->
+                <child>
+                  <object class="GtkScale">
+                    <property name="halign">start</property>
+                    <property name="vexpand">True</property>
+                    <property name="orientation">vertical</property>
+                    <property name="inverted">True</property>
+                    <property name="adjustment">
+                      <object class="GtkAdjustment" id="volume_adjustment">
+                        <property name="lower">0.0</property>
+                        <property name="upper">1.0</property>
+                        <property name="step-increment">0.05</property>
+                        <property name="page-increment">0.10</property>
+                      </object>
+                    </property>
+                    <property name="sensitive" bind-source="locked_button" bind-property="active" bind-flags="invert-boolean" />
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkToggleButton" id="locked_button">
+                    <property name="icon-name">changes-allow-symbolic</property>
+                    <signal name="notify::active" handler="on_locked_button_active_changed_cb" object="ObsAudioDeviceControls" swapped="no" />
+                    <style>
+                      <class name="flat" />
+                      <class name="circular" />
+                    </style>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <!-- Device name -->
+        <child>
+          <object class="GtkInscription">
+            <property name="min-lines">2</property>
+            <property name="nat-lines">2</property>
+            <property name="min-chars">20</property>
+            <property name="nat-chars">20</property>gtk_inscription_get_layout_location
+            <property name="xalign">0.5</property>
+            <property name="yalign">0.0</property>
+            <binding name="text">
+              <lookup name="name">
+                <lookup name="audio-device">ObsAudioDeviceControls</lookup>
+              </lookup>
+            </binding>
+            <binding name="tooltip-text">
+              <lookup name="name">
+                <lookup name="audio-device">ObsAudioDeviceControls</lookup>
+              </lookup>
+            </binding>
+            <style>
+              <class name="subtitle" />
+            </style>
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+</interface>
