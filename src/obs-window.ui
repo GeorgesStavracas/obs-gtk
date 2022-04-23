@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+  <requires lib="Panel" version="1.0"/>
+
+  <template class="ObsWindow" parent="AdwApplicationWindow">
+    <property name="title" translatable="yes">OBS Studio</property>
+    <property name="default-width">1200</property>
+    <property name="default-height">720</property>
+
+    <child>
+      <object class="GtkBox">
+        <property name="orientation">vertical</property>
+
+        <child>
+          <object class="AdwHeaderBar">
+            <property name="valign">start</property>
+            <property name="hexpand">True</property>
+            <property name="show-end-title-buttons">True</property>
+            <property name="show-start-title-buttons">True</property>
+
+            <!-- Stream button -->
+            <child type="start">
+              <object class="GtkToggleButton" id="stream_button">
+                <style>
+                  <class name="stream-button" />
+                </style>
+                <child>
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">network-cellular-symbolic</property>
+                    <property name="label">Stream</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Record button -->
+            <child type="start">
+              <object class="GtkToggleButton" id="record_button">
+                <style>
+                  <class name="record-button" />
+                </style>
+                <child>
+                  <object class="AdwButtonContent">
+                    <property name="icon-name">media-record-symbolic</property>
+                    <property name="label">Record</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- Primary menu -->
+            <child type="title">
+              <object class="AdwViewSwitcherTitle">
+                <property name="stack">main_stack</property>
+              </object>
+            </child>
+
+            <!-- Primary menu -->
+            <child type="end">
+              <object class="GtkMenuButton">
+                <property name="primary">True</property>
+                <property name="icon-name">open-menu-symbolic</property>
+                <property name="menu-model">primary_menu</property>
+              </object>
+            </child>
+
+            <!-- Preferences -->
+            <child type="end">
+              <object class="GtkButton">
+                <property name="icon-name">emblem-system-symbolic</property>
+                <property name="action-name">window.show-preferences</property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="AdwViewStack" id="main_stack">
+
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">activities</property>
+                <property name="icon-name">explore2-large-symbolic</property>
+                <property name="title" translatable="yes">Activities</property>
+                <property name="child">
+                  <object class="ObsActivitiesPage">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">scenes</property>
+                <property name="icon-name">music-queue-symbolic</property>
+                <property name="title" translatable="yes">Scenes</property>
+                <property name="child">
+                  <object class="ObsScenesPage">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+            <child>
+              <object class="AdwViewStackPage">
+                <property name="name">audio-mixer</property>
+                <property name="icon-name">sound-wave-symbolic</property>
+                <property name="title" translatable="yes">Mixer</property>
+                <property name="child">
+                  <object class="ObsMixerPage">
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <child>
+          <object class="PanelStatusbar">
+
+            <!-- Profile -->
+            <child type="prefix">
+              <object class="GtkMenuButton" id="profile_button">
+                <property name="direction">up</property>
+                <property name="popover">
+                  <object class="GtkPopoverMenu">
+                    <property name="menu-model">profile_menu</property>
+                  </object>
+                </property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="icon-name">general-properties-symbolic</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label">Profile: Default</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <!-- FPS -->
+            <child type="suffix">
+              <object class="GtkLabel" id="fps_label">
+                <property name="width-chars">10</property>
+                <property name="max-width-chars">10</property>
+              </object>
+            </child>
+
+            <child type="suffix">
+              <object class="GtkBox" id="stream_status_sox">
+                <property name="visible" bind-source="stream_button" bind-property="active" bind-flags="sync-create" />
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkImage" id="streamQualityIcon">
+                    <property name="icon-name">network-cellular-signal-none-symbolic</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="streamBitrateLabel">
+                    <property name="width-chars">8</property>
+                    <property name="label">— KB/s</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+            <child type="suffix">
+              <object class="GtkBox">
+                <property name="visible" bind-source="stream_button" bind-property="active" bind-flags="sync-create" />
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">network-cellular-symbolic</property>
+                    <style>
+                      <class name="stream-status-icon" />
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="stream_duration_label">
+                    <property name="label">00:00:00</property>
+                    <property name="width-chars">7</property>
+                    <property name="xalign">0.0</property>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+            <child type="suffix">
+              <object class="GtkBox">
+                <property name="visible" bind-source="record_button" bind-property="active" bind-flags="sync-create" />
+                <property name="spacing">6</property>
+
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">media-record-symbolic</property>
+                    <style>
+                      <class name="record-status-icon" />
+                    </style>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="GtkLabel" id="record_duration_label">
+                    <property name="label">00:00:00</property>
+                    <property name="width-chars">7</property>
+                    <property name="xalign">0.0</property>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+      </object>
+    </child>
+
+  </template>
+
+  <object class="GtkPopover" id="profile_selector_popover">
+
+  </object>
+
+  <!-- Primary menu -->
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Help Portal</attribute>
+        <attribute name="action">window.open-url</attribute>
+        <attribute name="target" type="s">'https://obsproject.com/help'</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Visit Website</attribute>
+        <attribute name="action">window.open-url</attribute>
+        <attribute name="target" type="s">'https://obsproject.com'</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">Join Discord Server</attribute>
+        <attribute name="action">window.open-url</attribute>
+        <attribute name="target" type="s">'https://obsproject.com/discord'</attribute>
+      </item>
+    </section>
+
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">About OBS Studio</attribute>
+      </item>
+    </section>
+  </menu>
+
+  <!-- Profile menu -->
+  <menu id="profile_menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">About OBS Studio</attribute>
+      </item>
+    </section>
+
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">Manage profiles…</attribute>
+        <attribute name="action">window.show-profiles</attribute>
+      </item>
+    </section>
+  </menu>
+
+</interface>

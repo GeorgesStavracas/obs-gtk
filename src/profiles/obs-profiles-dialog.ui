@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="Gtk" version="4.0"/>
+  <requires lib="Adw" version="1.0"/>
+
+  <template class="ObsProfilesDialog" parent="AdwWindow">
+    <property name="title" translatable="yes">Profiles</property>
+    <property name="default-width">700</property>
+    <property name="default-height">700</property>
+    <property name="modal">True</property>
+    <property name="destroy-with-parent">True</property>
+    <style>
+      <class name="preferences-dialog" />
+    </style>
+
+    <child>
+      <object class="AdwLeaflet">
+        <property name="can-unfold">False</property>
+
+        <!-- Profiles page -->
+        <child>
+          <object class="AdwLeafletPage">
+            <property name="name">profiles</property>
+            <property name="child">
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+
+                <child>
+                  <object class="AdwHeaderBar">
+                    <property name="show-start-title-buttons">True</property>
+                    <property name="show-end-title-buttons">True</property>
+                    <property name="title-widget">
+                      <object class="AdwWindowTitle">
+                        <property name="title" translatable="yes">Profiles</property>
+                      </object>
+                    </property>
+                  </object>
+                </child>
+
+                <child>
+                  <object class="AdwPreferencesPage">
+
+                  </object>
+                </child>
+
+              </object>
+            </property>
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+</interface>

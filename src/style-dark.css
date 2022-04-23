@@ -1,0 +1,12 @@
+/* Volume */
+
+@define-color volumebar_silent_color @dark_1;
+@define-color volumebar_nominal_color @green_4;
+@define-color volumebar_warning_color @yellow_4;
+@define-color volumebar_error_color @red_2;
+@define-color volumebar_clip_color @dark_4;
+
+audiocontrols volumebar levelbar trough block.filled.clip {
+  outline: 1px solid @borders;
+  outline-offset: -1.00001px;
+}

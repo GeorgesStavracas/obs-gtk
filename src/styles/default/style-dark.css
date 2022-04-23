@@ -1,0 +1,6 @@
+/* Default colors */
+
+@define-color popover_bg_color #2b2e38;
+@define-color window_bg_color #1f212a;
+@define-color view_bg_color #1f212a;
+@define-color headerbar_bg_color #2b2e38;
