@@ -20,7 +20,6 @@
 #cmakedefine GIO_FOUND
 #cmakedefine PULSEAUDIO_FOUND
 #cmakedefine XCB_XINPUT_FOUND
-#cmakedefine ENABLE_WAYLAND
 
 /* NOTE: Release candidate version numbers internally are always the previous
  * main release number!  For example, if the current public release is 21.0 and

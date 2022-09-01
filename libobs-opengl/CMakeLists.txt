@@ -51,32 +51,28 @@ elseif(OS_POSIX)
   find_package(X11_XCB REQUIRED)
   find_package(GBM REQUIRED)
   find_package(Libdrm REQUIRED)
+  find_package(Wayland REQUIRED)
+  find_package(
+    OpenGL
+    COMPONENTS EGL
+    REQUIRED)
 
   target_sources(libobs-opengl
                  PRIVATE gl-drm.c
                          gl-egl-common.c
                          gl-nix.c
+                         gl-wayland-egl.c
                          gl-x11-egl.c)
 
   target_link_libraries(libobs-opengl
                         PRIVATE XCB::XCB
                                 X11::X11_xcb
                                 GBM::GBM
-                                Libdrm::Libdrm)
+                                Libdrm::Libdrm
+                                OpenGL::EGL
+                                Wayland::EGL)
 
   set_target_properties(libobs-opengl PROPERTIES PREFIX "")
-
-  if(ENABLE_WAYLAND)
-    find_package(
-      OpenGL
-      COMPONENTS EGL
-      REQUIRED)
-    find_package(Wayland REQUIRED)
-
-    target_sources(libobs-opengl PRIVATE gl-wayland-egl.c)
-
-    target_link_libraries(libobs-opengl PRIVATE OpenGL::EGL Wayland::EGL)
-  endif()
 endif()
 
 setup_binary_target(libobs-opengl)

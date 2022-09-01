@@ -37,9 +37,7 @@ bool obs_module_load(void)
 		xcomposite_load();
 		break;
 
-#ifdef ENABLE_WAYLAND
 	case OBS_NIX_PLATFORM_WAYLAND:
-#endif
 	case OBS_NIX_PLATFORM_DRM:
 		break;
 	}
