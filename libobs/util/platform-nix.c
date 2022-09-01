@@ -706,7 +706,6 @@ int os_chdir(const char *path)
 
 #if !defined(__APPLE__)
 
-#if defined(GIO_FOUND)
 struct dbus_sleep_info;
 struct portal_inhibit_info;
 
@@ -722,10 +721,8 @@ extern void portal_inhibit_info_destroy(struct portal_inhibit_info *portal);
 #endif
 
 struct os_inhibit_info {
-#if defined(GIO_FOUND)
 	struct dbus_sleep_info *dbus;
 	struct portal_inhibit_info *portal;
-#endif
 	pthread_t screensaver_thread;
 	os_event_t *stop_event;
 	char *reason;
@@ -738,11 +735,9 @@ os_inhibit_t *os_inhibit_sleep_create(const char *reason)
 	struct os_inhibit_info *info = bzalloc(sizeof(*info));
 	sigset_t set;
 
-#if defined(GIO_FOUND)
 	info->portal = portal_inhibit_info_create();
 	if (!info->portal)
 		info->dbus = dbus_sleep_info_create();
-#endif
 
 	os_event_init(&info->stop_event, OS_EVENT_TYPE_AUTO);
 	posix_spawnattr_init(&info->attr);
@@ -795,12 +790,10 @@ bool os_inhibit_sleep_set_active(os_inhibit_t *info, bool active)
 	if (info->active == active)
 		return false;
 
-#if defined(GIO_FOUND)
 	if (info->portal)
 		portal_inhibit(info->portal, info->reason, active);
 	if (info->dbus)
 		dbus_inhibit_sleep(info->dbus, info->reason, active);
-#endif
 
 	if (!info->stop_event)
 		return true;
@@ -826,18 +819,14 @@ void os_inhibit_sleep_destroy(os_inhibit_t *info)
 {
 	if (info) {
 		os_inhibit_sleep_set_active(info, false);
-#if defined(GIO_FOUND)
 		portal_inhibit_info_destroy(info->portal);
 		dbus_sleep_info_destroy(info->dbus);
-#endif
 		os_event_destroy(info->stop_event);
 		posix_spawnattr_destroy(&info->attr);
 		bfree(info->reason);
 		bfree(info);
 	}
 }
-
-#endif
 
 void os_breakpoint()
 {

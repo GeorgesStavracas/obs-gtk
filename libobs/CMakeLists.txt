@@ -10,6 +10,7 @@ find_package(
   COMPONENTS avformat avutil swscale swresample
   OPTIONAL_COMPONENTS avcodec)
 find_package(ZLIB REQUIRED)
+find_package(Gio REQUIRED)
 
 if(ENABLE_UI)
   find_qt(COMPONENTS Core)
@@ -245,6 +246,7 @@ target_link_libraries(
           FFmpeg::avutil
           FFmpeg::swscale
           FFmpeg::swresample
+          GIO::GIO
           Jansson::Jansson
           OBS::caption
           ZLIB::ZLIB
@@ -418,13 +420,8 @@ elseif(OS_POSIX)
     target_sources(libobs PRIVATE audio-monitoring/null/null-audio-monitoring.c)
   endif()
 
-  find_package(Gio)
-  if(TARGET GIO::GIO)
-    target_link_libraries(libobs PRIVATE GIO::GIO)
-
-    target_sources(libobs PRIVATE util/platform-nix-dbus.c
-                                  util/platform-nix-portal.c)
-  endif()
+  target_sources(libobs PRIVATE util/platform-nix-dbus.c
+                                util/platform-nix-portal.c)
 
   if(TARGET XCB::XINPUT)
     target_link_libraries(libobs PRIVATE XCB::XINPUT)
