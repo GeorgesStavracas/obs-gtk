@@ -403,8 +403,8 @@ jobs:
         if: ${{ success() && (github.event_name != 'pull_request' || env.SEEKING_TESTERS == '1') }}
         with:
           bundle: obs-studio-flatpak-${{ env.OBS_GIT_HASH }}.flatpak
-          manifest-path: CI/flatpak/com.obsproject.Studio.json
-          cache-key: flatpak-builder-${{ hashFiles('CI/flatpak/com.obsproject.Studio.json') }}
+          manifest-path: CI/flatpak/com.obsproject.Studio.GTK4.json
+          cache-key: flatpak-builder-${{ hashFiles('CI/flatpak/com.obsproject.Studio.GTK4.json') }}
 
   windows_package:
     name: '03 - Windows Installer'
