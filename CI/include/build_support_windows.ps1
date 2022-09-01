@@ -3,7 +3,6 @@ $WorkflowContent = Get-Content ${CIWorkflow}
 
 $CIDepsVersion = ${WorkflowContent} | Select-String "[ ]+DEPS_VERSION_WIN: '([0-9\-]+)'" | ForEach-Object{$_.Matches.Groups[1].Value}
 $CIQtVersion = ${WorkflowContent} | Select-String "[ ]+QT_VERSION_WIN: '([0-9\.]+)'" | ForEach-Object{$_.Matches.Groups[1].Value}
-$CIVlcVersion = ${WorkflowContent} | Select-String "[ ]+VLC_VERSION_WIN: '(.+)'" | ForEach-Object{$_.Matches.Groups[1].Value}
 $CICefVersion = ${WorkflowContent} | Select-String "[ ]+CEF_BUILD_VERSION_WIN: '([0-9\.]+)'" | ForEach-Object{$_.Matches.Groups[1].Value}
 $CIGenerator = ${WorkflowContent} | Select-String "[ ]+CMAKE_GENERATOR: '(.+)'" | ForEach-Object{$_.Matches.Groups[1].Value}
 
@@ -143,7 +142,6 @@ $BuildConfiguration = "$(if (Test-Path Env:BuildConfiguration) { $env:BuildConfi
 $BuildArch = "$(if (Test-Path Env:BuildArch) { $env:BuildArch } else { $BuildArch })"
 $WindowsDepsVersion = "$(if (Test-Path Env:WindowsDepsVersion ) { $env:WindowsDepsVersion } else { $CIDepsVersion })"
 $WindowsQtVersion = "$(if (Test-Path Env:WindowsQtVersion ) { $env:WindowsQtVersion } else { $CIQtVersion })"
-$WindowsVlcVersion = "$(if (Test-Path Env:WindowsVlcVersion ) { $env:WindowsVlcVersion } else { $CIVlcVersion })"
 $WindowsCefVersion = "$(if (Test-Path Env:WindowsCefVersion ) { $env:WindowsCefVersion } else { $CICefVersion })"
 $CmakeSystemVersion = "$(if (Test-Path Env:CMAKE_SYSTEM_VERSION) { $Env:CMAKE_SYSTEM_VERSION } else { "10.0.18363.657" })"
 $CmakeGenerator = "$(if (Test-Path Env:CmakeGenerator) { $Env:CmakeGenerator } else { $CIGenerator })"

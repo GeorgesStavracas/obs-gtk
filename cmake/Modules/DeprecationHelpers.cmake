@@ -191,8 +191,6 @@ set(_DEPRECATED_VARS
     mbedtlsPath
     LuajitPath
     x264Path
-    VlcPath
-    VLCPath
     speexPath
     rnnoisePath
     LibfdkPath

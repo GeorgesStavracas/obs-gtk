@@ -110,16 +110,6 @@ macro(setup_obs_project)
     list(APPEND CMAKE_PREFIX_PATH "${QTDIR}")
   endif()
 
-  if(DEFINED ENV{VLCPath})
-    set(VLCPath "$ENV{VLCPath}")
-  elseif(DEFINED ENV{OBS_VLCPath})
-    set(VLCPath "$ENV{OBS_VLCPath}")
-  endif()
-
-  if(DEFINED VLCPath)
-    set(VLC_PATH "${VLCPath}")
-  endif()
-
   if(DEFINED ENV{CEF_ROOT_DIR})
     set(CEF_ROOT_DIR "$ENV{CEF_ROOT_DIR}")
   elseif(DEFINED ENV{OBS_CEF_ROOT_DIR})
