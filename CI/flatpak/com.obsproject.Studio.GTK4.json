@@ -432,7 +432,6 @@
         "-DENABLE_WAYLAND=ON",
         "-DENABLE_BROWSER=OFF",
         "-DUSE_XDG=ON",
-        "-DENABLE_ALSA=OFF",
         "-DENABLE_PULSEAUDIO=ON",
         "-DENABLE_JACK=ON",
         "-DENABLE_RTMPS=ON",
