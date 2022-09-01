@@ -32,7 +32,6 @@
 #
 #   MACOS_DEPS_VERSION        : Precompiled macOS dependencies version
 #   MACOS_CEF_BUILD_VERSION   : Chromium Embedded Framework version
-#   VLC_VERSION               : VLC version
 #   SPARKLE_VERSION           : Sparkle Framework version
 #
 ##############################################################################

@@ -42,27 +42,6 @@ install_qt-deps() {
     /usr/bin/xattr -r -d com.apple.quarantine ./obs-deps
 }
 
-install_vlc() {
-    status "Set up dependency VLC v${1}"
-    ensure_dir "${DEPS_BUILD_DIR}"
-    unset _SKIP
-
-    if [ "${CI}" -a "${RESTORED_VLC}" ]; then
-        _SKIP=TRUE
-    elif [ -d "${DEPS_BUILD_DIR}/vlc-${1}" -a -f "${DEPS_BUILD_DIR}/vlc-${1}/include/vlc/vlc.h" ]; then
-        _SKIP=TRUE
-    fi
-
-    if [ -z "${_SKIP}" ]; then
-        step "Download..."
-        check_and_fetch "https://downloads.videolan.org/vlc/${1}/vlc-${1}.tar.xz" "${2}"
-        step "Unpack..."
-        /usr/bin/tar -xf vlc-${1}.tar.xz
-    else
-        step "Found existing VLC..."
-    fi
-}
-
 install_sparkle() {
     status "Set up dependency Sparkle v${1}"
     ensure_dir "${DEPS_BUILD_DIR}"
@@ -136,7 +115,6 @@ install_dependencies() {
         "obs-deps ${MACOS_DEPS_VERSION:-${CI_DEPS_VERSION}} ${MACOS_DEPS_HASH:-${CI_DEPS_HASH}}"
         "qt-deps ${MACOS_DEPS_VERSION:-${CI_DEPS_VERSION}} ${QT_HASH:-${CI_QT_HASH}}"
         "cef ${MACOS_CEF_BUILD_VERSION:-${CI_MACOS_CEF_VERSION}} ${CEF_HASH:-${CI_CEF_HASH}}"
-        "vlc ${VLC_VERSION:-${CI_VLC_VERSION}} ${VLC_HASH:-${CI_VLC_HASH}}"
         "sparkle ${SPARKLE_VERSION:-${CI_SPARKLE_VERSION}} ${SPARKLE_HASH:-${CI_SPARKLE_HASH}}"
     )
 
