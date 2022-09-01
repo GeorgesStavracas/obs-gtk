@@ -435,7 +435,6 @@
         "-DENABLE_PULSEAUDIO=ON",
         "-DENABLE_JACK=ON",
         "-DENABLE_RTMPS=ON",
-        "-DENABLE_VLC=OFF",
         "-DENABLE_VST=OFF",
         "-DENABLE_AJA=ON",
         "-DENABLE_UI=OFF",

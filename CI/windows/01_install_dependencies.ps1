@@ -69,30 +69,6 @@ function Install-qt-deps {
     }
 }
 
-function Install-vlc {
-    Param(
-        [Parameter(Mandatory=$true)]
-        [String]$Version
-    )
-
-    Write-Status "Setup for dependency VLC v${Version}"
-    Ensure-Directory $DepsBuildDir
-
-    if (!((Test-Path "$DepsBuildDir/vlc-${Version}") -and (Test-Path "$DepsBuildDir/vlc-${Version}/include/vlc/vlc.h"))) {
-        Write-Step "Download..."
-        $ProgressPreference = $(if ($Quiet.isPresent) { 'SilentlyContinue' } else { 'Continue' })
-        Invoke-WebRequest -Uri "https://cdn-fastly.obsproject.com/downloads/vlc.zip" -UseBasicParsing -OutFile "vlc_${Version}.zip"
-        $ProgressPreference = "Continue"
-
-        Write-Step "Unpack..."
-        # Expand-Archive -Path "vlc_${Version}.zip"
-        Invoke-Expression "7z x vlc_${Version}.zip -ovlc"
-        Move-Item -Path vlc -Destination "vlc-${Version}"
-    } else {
-        Write-Step "Found existing VLC..."
-    }
-}
-
 function Install-cef {
     Param(
         [Parameter(Mandatory=$true)]
@@ -126,7 +102,6 @@ function Install-Dependencies {
     $BuildDependencies = @(
         @('obs-deps', $WindowsDepsVersion),
         @('qt-deps', $WindowsDepsVersion),
-        @('vlc', $WindowsVlcVersion),
         @('cef', $WindowsCefVersion)
     )
 
