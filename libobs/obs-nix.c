@@ -21,10 +21,7 @@
 #include "obs-nix-platform.h"
 #include "obs-nix-x11.h"
 #include "obs-nix-drm.h"
-
-#ifdef ENABLE_WAYLAND
 #include "obs-nix-wayland.h"
-#endif
 
 #if defined(__FreeBSD__)
 #define _GNU_SOURCE
@@ -331,10 +328,8 @@ void log_system_info(void)
 	case OBS_NIX_PLATFORM_X11_EGL:
 		obs_nix_x11_log_info();
 		break;
-#ifdef ENABLE_WAYLAND
 	case OBS_NIX_PLATFORM_WAYLAND:
 		break;
-#endif
 	case OBS_NIX_PLATFORM_DRM:
 		obs_nix_drm_log_info();
 		break;
@@ -347,11 +342,9 @@ bool obs_hotkeys_platform_init(struct obs_core_hotkeys *hotkeys)
 	case OBS_NIX_PLATFORM_X11_EGL:
 		hotkeys_vtable = obs_nix_x11_get_hotkeys_vtable();
 		break;
-#ifdef ENABLE_WAYLAND
 	case OBS_NIX_PLATFORM_WAYLAND:
 		hotkeys_vtable = obs_nix_wayland_get_hotkeys_vtable();
 		break;
-#endif
 	case OBS_NIX_PLATFORM_DRM:
 		hotkeys_vtable = obs_nix_drm_get_hotkeys_vtable();
 		break;
