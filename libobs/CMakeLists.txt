@@ -430,20 +430,15 @@ elseif(OS_POSIX)
     target_link_libraries(libobs PRIVATE XCB::XINPUT)
   endif()
 
-  if(ENABLE_WAYLAND)
+  if(OS_LINUX)
+    find_package(Xkbcommon REQUIRED)
     find_package(
       Wayland
       COMPONENTS Client
       REQUIRED)
-    find_package(Xkbcommon REQUIRED)
 
-    target_link_libraries(libobs PRIVATE Wayland::Client Xkbcommon::Xkbcommon)
-
-    target_sources(libobs PRIVATE obs-nix-wayland.c)
-  endif()
-
-  if(OS_LINUX)
-    target_sources(libobs PRIVATE obs-nix-drm.c)
+    target_sources(libobs PRIVATE obs-nix-wayland.c obs-nix-drm.c)
+    target_link_libraries(libobs PRIVATE XCB::XINPUT Wayland::Client Xkbcommon::Xkbcommon)
     target_link_libraries(glad PRIVATE ${CMAKE_DL_LIBS})
   endif()
 

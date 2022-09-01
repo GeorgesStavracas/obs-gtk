@@ -18,11 +18,8 @@
 #include "gl-nix.h"
 
 #include "gl-drm.h"
-#include "gl-x11-egl.h"
-
-#ifdef ENABLE_WAYLAND
 #include "gl-wayland-egl.h"
-#endif
+#include "gl-x11-egl.h"
 
 static const struct gl_winsys_vtable *gl_vtable = NULL;
 
@@ -34,12 +31,10 @@ static void init_winsys(void)
 	case OBS_NIX_PLATFORM_X11_EGL:
 		gl_vtable = gl_x11_egl_get_winsys_vtable();
 		break;
-#ifdef ENABLE_WAYLAND
 	case OBS_NIX_PLATFORM_WAYLAND:
 		gl_vtable = gl_wayland_egl_get_winsys_vtable();
 		blog(LOG_INFO, "Using EGL/Wayland");
 		break;
-#endif
 	case OBS_NIX_PLATFORM_DRM:
 		gl_vtable = gl_drm_get_winsys_vtable();
 		blog(LOG_INFO, "Using DRM");
