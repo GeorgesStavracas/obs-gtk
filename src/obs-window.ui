@@ -128,33 +128,6 @@
         <child>
           <object class="PanelStatusbar">
 
-            <!-- Profile -->
-            <child type="prefix">
-              <object class="GtkMenuButton" id="profile_button">
-                <property name="direction">up</property>
-                <property name="popover">
-                  <object class="GtkPopoverMenu">
-                    <property name="menu-model">profile_menu</property>
-                  </object>
-                </property>
-                <child>
-                  <object class="GtkBox">
-                    <property name="spacing">6</property>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="icon-name">general-properties-symbolic</property>
-                      </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel">
-                        <property name="label">Profile: Default</property>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-              </object>
-            </child>
-
             <!-- FPS -->
             <child type="suffix">
               <object class="GtkLabel" id="fps_label">
