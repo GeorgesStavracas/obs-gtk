@@ -66,17 +66,6 @@
                 <property name="vhomogeneous">False</property>
                 <property name="transition-type">crossfade</property>
 
-                <!-- TODO: General -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">general</property>
-                    <property name="title" translatable="yes">General</property>
-                    <property name="child">
-                      <object class="AdwBin" />
-                    </property>
-                  </object>
-                </child>
-
                 <!-- Appearance -->
                 <child>
                   <object class="GtkStackPage">
@@ -84,61 +73,6 @@
                     <property name="title" translatable="yes">Appearance</property>
                     <property name="child">
                       <object class="ObsAppearancePage" />
-                    </property>
-                  </object>
-                </child>
-
-                <!-- TODO: Scene Editor -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">scene-editor</property>
-                    <property name="title" translatable="yes">Scene Editor</property>
-                    <property name="child">
-                      <object class="AdwBin" />
-                    </property>
-                  </object>
-                </child>
-
-                <!-- TODO: Keyboard Shortcuts -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">shortcuts</property>
-                    <property name="title" translatable="yes">Keyboard Shortcuts</property>
-                    <property name="child">
-                      <object class="AdwBin" />
-                    </property>
-                  </object>
-                </child>
-
-                <!-- TODO: Audio -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">audio</property>
-                    <property name="title" translatable="yes">Audio</property>
-                    <property name="child">
-                      <object class="AdwBin" />
-                    </property>
-                  </object>
-                </child>
-
-                <!-- TODO: Video -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">video</property>
-                    <property name="title" translatable="yes">Video</property>
-                    <property name="child">
-                      <object class="AdwBin" />
-                    </property>
-                  </object>
-                </child>
-
-                <!-- TODO: Video -->
-                <child>
-                  <object class="GtkStackPage">
-                    <property name="name">network</property>
-                    <property name="title" translatable="yes">Network</property>
-                    <property name="child">
-                      <object class="AdwBin" />
                     </property>
                   </object>
                 </child>
