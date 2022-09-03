@@ -25,10 +25,12 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_TEMPLATES_MANAGER (obs_templates_manager_get_type())
-G_DECLARE_FINAL_TYPE (ObsTemplatesManager, obs_templates_manager, OBS, TEMPLATES_MANAGER, GObject)
+G_DECLARE_FINAL_TYPE(ObsTemplatesManager, obs_templates_manager, OBS,
+		     TEMPLATES_MANAGER, GObject)
 
-ObsTemplatesManager *obs_templates_manager_new                      (void);
-void                 obs_templates_manager_load_templates           (ObsTemplatesManager *self);
-GListModel          *obs_templates_manager_get_collection_templates (ObsTemplatesManager *self);
+ObsTemplatesManager *obs_templates_manager_new(void);
+void obs_templates_manager_load_templates(ObsTemplatesManager *self);
+GListModel *
+obs_templates_manager_get_collection_templates(ObsTemplatesManager *self);
 
 G_END_DECLS

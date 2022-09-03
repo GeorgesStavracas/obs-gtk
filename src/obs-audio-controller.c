@@ -36,8 +36,7 @@
 #define OUTPUT_AUDIO_SOURCE "pulse_output_capture"
 #endif
 
-struct _ObsAudioController
-{
+struct _ObsAudioController {
 	GObject parent_instance;
 
 	GListStore *input_devices;
@@ -47,10 +46,9 @@ struct _ObsAudioController
 	bool shutdown;
 };
 
-G_DEFINE_FINAL_TYPE (ObsAudioController, obs_audio_controller, G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE(ObsAudioController, obs_audio_controller, G_TYPE_OBJECT)
 
-static void
-populate_all_devices(ObsAudioController *self)
+static void populate_all_devices(ObsAudioController *self)
 {
 	obs_properties_t *output_props;
 	obs_properties_t *input_props;
@@ -58,7 +56,8 @@ populate_all_devices(ObsAudioController *self)
 	/* Input */
 	input_props = obs_get_source_properties(INPUT_AUDIO_SOURCE);
 	if (input_props) {
-		obs_property_t *inputs = obs_properties_get(input_props, "device_id");
+		obs_property_t *inputs =
+			obs_properties_get(input_props, "device_id");
 		size_t n_inputs = obs_property_list_item_count(inputs);
 
 		for (size_t i = 0; i < n_inputs; i++) {
@@ -68,17 +67,21 @@ populate_all_devices(ObsAudioController *self)
 			const char *input_name;
 			obs_data_t *settings;
 
-			if (g_strcmp0(obs_property_list_item_string(inputs, i), "default") == 0)
+			if (g_strcmp0(obs_property_list_item_string(inputs, i),
+				      "default") == 0)
 				continue;
 
 			input_name = obs_property_list_item_name(inputs, i);
 			input_string = obs_property_list_item_string(inputs, i);
 
 			settings = obs_data_create();
-			obs_data_set_string(settings, "device_id", input_string);
-			source = obs_source_create(INPUT_AUDIO_SOURCE, input_name, settings, NULL);
+			obs_data_set_string(settings, "device_id",
+					    input_string);
+			source = obs_source_create(INPUT_AUDIO_SOURCE,
+						   input_name, settings, NULL);
 
-			audio_device = obs_audio_device_new (OBS_AUDIO_DEVICE_INPUT, source);
+			audio_device = obs_audio_device_new(
+				OBS_AUDIO_DEVICE_INPUT, source);
 			g_list_store_append(self->input_devices, audio_device);
 
 			g_object_unref(audio_device);
@@ -88,7 +91,8 @@ populate_all_devices(ObsAudioController *self)
 
 	output_props = obs_get_source_properties(OUTPUT_AUDIO_SOURCE);
 	if (output_props) {
-		obs_property_t *outputs = obs_properties_get(output_props, "device_id");
+		obs_property_t *outputs =
+			obs_properties_get(output_props, "device_id");
 		size_t n_outputs = obs_property_list_item_count(outputs);
 
 		for (size_t i = 0; i < n_outputs; i++) {
@@ -98,17 +102,22 @@ populate_all_devices(ObsAudioController *self)
 			const char *output_name;
 			obs_data_t *settings;
 
-			if (g_strcmp0(obs_property_list_item_string(outputs, i), "default") == 0)
+			if (g_strcmp0(obs_property_list_item_string(outputs, i),
+				      "default") == 0)
 				continue;
 
 			output_name = obs_property_list_item_name(outputs, i);
-			output_string = obs_property_list_item_string(outputs, i);
+			output_string =
+				obs_property_list_item_string(outputs, i);
 
 			settings = obs_data_create();
-			obs_data_set_string(settings, "device_id", output_string);
-			source = obs_source_create(INPUT_AUDIO_SOURCE, output_name, settings, NULL);
+			obs_data_set_string(settings, "device_id",
+					    output_string);
+			source = obs_source_create(INPUT_AUDIO_SOURCE,
+						   output_name, settings, NULL);
 
-			audio_device = obs_audio_device_new (OBS_AUDIO_DEVICE_OUTPUT, source);
+			audio_device = obs_audio_device_new(
+				OBS_AUDIO_DEVICE_OUTPUT, source);
 			g_list_store_append(self->output_devices, audio_device);
 			g_object_unref(audio_device);
 		}
@@ -116,8 +125,7 @@ populate_all_devices(ObsAudioController *self)
 	g_clear_pointer(&output_props, obs_properties_destroy);
 }
 
-static void
-reset_audio(ObsAudioController *self)
+static void reset_audio(ObsAudioController *self)
 {
 	struct obs_audio_info ai;
 
@@ -128,8 +136,7 @@ reset_audio(ObsAudioController *self)
 	obs_reset_audio(&ai);
 }
 
-static void
-obs_audio_controller_finalize(GObject *object)
+static void obs_audio_controller_finalize(GObject *object)
 {
 	ObsAudioController *self = (ObsAudioController *)object;
 
@@ -139,19 +146,17 @@ obs_audio_controller_finalize(GObject *object)
 	g_clear_object(&self->output_devices);
 	g_clear_object(&self->all_devices);
 
-	G_OBJECT_CLASS (obs_audio_controller_parent_class)->finalize (object);
+	G_OBJECT_CLASS(obs_audio_controller_parent_class)->finalize(object);
 }
 
-static void
-obs_audio_controller_class_init(ObsAudioControllerClass *klass)
+static void obs_audio_controller_class_init(ObsAudioControllerClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
 	object_class->finalize = obs_audio_controller_finalize;
 }
 
-static void
-obs_audio_controller_init(ObsAudioController *self)
+static void obs_audio_controller_init(ObsAudioController *self)
 {
 	GListStore *aux;
 
@@ -165,26 +170,24 @@ obs_audio_controller_init(ObsAudioController *self)
 	g_list_store_append(aux, self->output_devices);
 	g_list_store_append(aux, self->input_devices);
 
-	self->all_devices = G_LIST_MODEL(gtk_flatten_list_model_new(G_LIST_MODEL(aux)));
+	self->all_devices =
+		G_LIST_MODEL(gtk_flatten_list_model_new(G_LIST_MODEL(aux)));
 }
 
-ObsAudioController *
-obs_audio_controller_new(void)
+ObsAudioController *obs_audio_controller_new(void)
 {
-	return g_object_new (OBS_TYPE_AUDIO_CONTROLLER, NULL);
+	return g_object_new(OBS_TYPE_AUDIO_CONTROLLER, NULL);
 }
 
-void
-obs_audio_controller_initialize(ObsAudioController *self)
+void obs_audio_controller_initialize(ObsAudioController *self)
 {
-	g_return_if_fail(OBS_IS_AUDIO_CONTROLLER (self));
+	g_return_if_fail(OBS_IS_AUDIO_CONTROLLER(self));
 
 	populate_all_devices(self);
 	reset_audio(self);
 }
 
-void
-obs_audio_controller_shutdown (ObsAudioController *self)
+void obs_audio_controller_shutdown(ObsAudioController *self)
 {
 	g_return_if_fail(OBS_IS_AUDIO_CONTROLLER(self));
 
@@ -194,22 +197,19 @@ obs_audio_controller_shutdown (ObsAudioController *self)
 	self->shutdown = true;
 }
 
-GListModel *
-obs_audio_controller_get_input_devices (ObsAudioController *self)
+GListModel *obs_audio_controller_get_input_devices(ObsAudioController *self)
 {
 	g_return_val_if_fail(OBS_IS_AUDIO_CONTROLLER(self), NULL);
 	return G_LIST_MODEL(self->input_devices);
 }
 
-GListModel *
-obs_audio_controller_get_output_devices (ObsAudioController *self)
+GListModel *obs_audio_controller_get_output_devices(ObsAudioController *self)
 {
 	g_return_val_if_fail(OBS_IS_AUDIO_CONTROLLER(self), NULL);
 	return G_LIST_MODEL(self->output_devices);
 }
 
-GListModel *
-obs_audio_controller_get_devices (ObsAudioController *self)
+GListModel *obs_audio_controller_get_devices(ObsAudioController *self)
 {
 	g_return_val_if_fail(OBS_IS_AUDIO_CONTROLLER(self), NULL);
 	return self->all_devices;

@@ -25,8 +25,9 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_PROFILES_DIALOG (obs_profiles_dialog_get_type())
-G_DECLARE_FINAL_TYPE(ObsProfilesDialog, obs_profiles_dialog, OBS, PROFILES_DIALOG, AdwWindow)
+G_DECLARE_FINAL_TYPE(ObsProfilesDialog, obs_profiles_dialog, OBS,
+		     PROFILES_DIALOG, AdwWindow)
 
-GtkWindow * obs_profiles_dialog_new (void);
+GtkWindow *obs_profiles_dialog_new(void);
 
 G_END_DECLS

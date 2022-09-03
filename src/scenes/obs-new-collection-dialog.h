@@ -25,8 +25,9 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_NEW_COLLECTION_DIALOG (obs_new_collection_dialog_get_type())
-G_DECLARE_FINAL_TYPE (ObsNewCollectionDialog, obs_new_collection_dialog, OBS, NEW_COLLECTION_DIALOG, AdwWindow)
+G_DECLARE_FINAL_TYPE(ObsNewCollectionDialog, obs_new_collection_dialog, OBS,
+		     NEW_COLLECTION_DIALOG, AdwWindow)
 
-GtkWindow * obs_new_collection_dialog_new (void);
+GtkWindow *obs_new_collection_dialog_new(void);
 
 G_END_DECLS

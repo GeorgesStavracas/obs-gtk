@@ -51,11 +51,11 @@ struct gl_winsys_vtable {
 	void (*device_load_swapchain)(gs_device_t *device,
 				      gs_swapchain_t *swap);
 
-	bool (*device_swapchain_acquire_texture)(gs_swapchain_t *swap,
-						 struct gs_display_texture *texture);
+	bool (*device_swapchain_acquire_texture)(
+		gs_swapchain_t *swap, struct gs_display_texture *texture);
 
-	void (*device_swapchain_release_texture)(gs_swapchain_t *swap,
-						 struct gs_display_texture *texture);
+	void (*device_swapchain_release_texture)(
+		gs_swapchain_t *swap, struct gs_display_texture *texture);
 
 	void (*device_present)(gs_device_t *device);
 

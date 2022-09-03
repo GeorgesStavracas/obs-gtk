@@ -30,8 +30,7 @@
 #include <util/platform.h>
 #include <util/threading.h>
 
-struct _ObsWindow
-{
+struct _ObsWindow {
 	AdwApplicationWindow parent_instance;
 
 	GtkLabel *fps_label;
@@ -39,7 +38,7 @@ struct _ObsWindow
 	guint fps_timeout_id;
 };
 
-G_DEFINE_FINAL_TYPE (ObsWindow, obs_window, ADW_TYPE_APPLICATION_WINDOW)
+G_DEFINE_FINAL_TYPE(ObsWindow, obs_window, ADW_TYPE_APPLICATION_WINDOW)
 
 static int reset_video(void)
 {
@@ -58,7 +57,7 @@ static int reset_video(void)
 		.gpu_conversion = true,
 	};
 
-	return obs_reset_video (&ovi);
+	return obs_reset_video(&ovi);
 }
 
 static void update_status_bar_info(ObsWindow *self)
@@ -83,24 +82,22 @@ static gboolean update_fps_cb(gpointer user_data)
  * Actions
  */
 
-static void
-on_open_url_action_cb (GtkWidget  *widget,
-                       const char *action_name,
-                       GVariant   *parameter)
+static void on_open_url_action_cb(GtkWidget *widget, const char *action_name,
+				  GVariant *parameter)
 {
 	const char *url;
 
 	g_assert(g_strcmp0(action_name, "window.open-url") == 0);
-	g_assert(parameter != NULL && g_variant_check_format_string(parameter, "s", FALSE));
+	g_assert(parameter != NULL &&
+		 g_variant_check_format_string(parameter, "s", FALSE));
 
 	url = g_variant_get_string(parameter, NULL);
-	gtk_show_uri (GTK_WINDOW(widget), url, GDK_CURRENT_TIME);
+	gtk_show_uri(GTK_WINDOW(widget), url, GDK_CURRENT_TIME);
 }
 
-static void
-on_show_preferences_action_cb (GtkWidget  *widget,
-                               const char *action_name,
-                               GVariant   *parameter)
+static void on_show_preferences_action_cb(GtkWidget *widget,
+					  const char *action_name,
+					  GVariant *parameter)
 {
 	GtkWidget *dialog;
 
@@ -108,14 +105,13 @@ on_show_preferences_action_cb (GtkWidget  *widget,
 	g_assert(parameter == NULL);
 
 	dialog = obs_preferences_dialog_new();
-	gtk_window_set_transient_for (GTK_WINDOW(dialog), GTK_WINDOW(widget));
+	gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(widget));
 	gtk_window_present(GTK_WINDOW(dialog));
 }
 
-static void
-on_show_profiles_action_cb (GtkWidget  *widget,
-                            const char *action_name,
-                            GVariant   *parameter)
+static void on_show_profiles_action_cb(GtkWidget *widget,
+				       const char *action_name,
+				       GVariant *parameter)
 {
 	GtkWindow *dialog;
 
@@ -131,67 +127,62 @@ on_show_profiles_action_cb (GtkWidget  *widget,
  * GObject overrides
  */
 
-static void
-obs_window_finalize (GObject *object)
+static void obs_window_finalize(GObject *object)
 {
 	ObsWindow *self = (ObsWindow *)object;
 
 	g_clear_handle_id(&self->fps_timeout_id, g_source_remove);
 
-	G_OBJECT_CLASS (obs_window_parent_class)->finalize(object);
+	G_OBJECT_CLASS(obs_window_parent_class)->finalize(object);
 }
 
-static void
-obs_window_constructed (GObject *object)
+static void obs_window_constructed(GObject *object)
 {
 	ObsWindow *self = (ObsWindow *)object;
 
-	G_OBJECT_CLASS (obs_window_parent_class)->constructed(object);
+	G_OBJECT_CLASS(obs_window_parent_class)->constructed(object);
 
-	self->fps_timeout_id = g_timeout_add_seconds_full(G_PRIORITY_LOW,
-							  2,
-							  update_fps_cb,
-							  self,
-							  NULL);
+	self->fps_timeout_id = g_timeout_add_seconds_full(
+		G_PRIORITY_LOW, 2, update_fps_cb, self, NULL);
 	update_status_bar_info(self);
 
 	int status = reset_video();
 	if (status != VIDEO_OUTPUT_SUCCESS)
-		g_warning ("Error: %d", status);
+		g_warning("Error: %d", status);
 }
 
-static void
-obs_window_class_init (ObsWindowClass *klass)
+static void obs_window_class_init(ObsWindowClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-	g_type_ensure (OBS_TYPE_ACTIVITIES_PAGE);
-	g_type_ensure (OBS_TYPE_MIXER_PAGE);
-	g_type_ensure (OBS_TYPE_SCENES_PAGE);
+	g_type_ensure(OBS_TYPE_ACTIVITIES_PAGE);
+	g_type_ensure(OBS_TYPE_MIXER_PAGE);
+	g_type_ensure(OBS_TYPE_SCENES_PAGE);
 
 	object_class->finalize = obs_window_finalize;
 	object_class->constructed = obs_window_constructed;
 
-	gtk_widget_class_set_template_from_resource (widget_class, "/com/obsproject/Studio/GTK4/ui/obs-window.ui");
+	gtk_widget_class_set_template_from_resource(
+		widget_class, "/com/obsproject/Studio/GTK4/ui/obs-window.ui");
 
-	gtk_widget_class_bind_template_child (widget_class, ObsWindow, fps_label);
+	gtk_widget_class_bind_template_child(widget_class, ObsWindow,
+					     fps_label);
 
-	gtk_widget_class_install_action (widget_class, "window.open-url", "s", on_open_url_action_cb);
-	gtk_widget_class_install_action (widget_class, "window.show-preferences", NULL, on_show_preferences_action_cb);
-	gtk_widget_class_install_action (widget_class, "window.show-profiles", NULL, on_show_profiles_action_cb);
+	gtk_widget_class_install_action(widget_class, "window.open-url", "s",
+					on_open_url_action_cb);
+	gtk_widget_class_install_action(widget_class, "window.show-preferences",
+					NULL, on_show_preferences_action_cb);
+	gtk_widget_class_install_action(widget_class, "window.show-profiles",
+					NULL, on_show_profiles_action_cb);
 }
 
-static void
-obs_window_init (ObsWindow *self)
+static void obs_window_init(ObsWindow *self)
 {
-	gtk_widget_init_template (GTK_WIDGET (self));
+	gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-ObsWindow *
-obs_window_new (GApplication *application)
+ObsWindow *obs_window_new(GApplication *application)
 {
-	return g_object_new (OBS_TYPE_WINDOW,
-			     "application", application,
-			     NULL);
+	return g_object_new(OBS_TYPE_WINDOW, "application", application, NULL);
 }

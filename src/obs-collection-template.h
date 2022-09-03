@@ -25,22 +25,21 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_COLLECTION_TEMPLATE (obs_collection_template_get_type())
-G_DECLARE_FINAL_TYPE (ObsCollectionTemplate, obs_collection_template, OBS, COLLECTION_TEMPLATE, GObject)
+G_DECLARE_FINAL_TYPE(ObsCollectionTemplate, obs_collection_template, OBS,
+		     COLLECTION_TEMPLATE, GObject)
 
-ObsCollectionTemplate *obs_collection_template_new           (const char             *id,
-                                                              const char             *name,
-                                                              GError                **error);
-const char            *obs_collection_template_get_id        (ObsCollectionTemplate  *self);
-const char            *obs_collection_template_get_name      (ObsCollectionTemplate  *self);
-GdkPaintable          *obs_collection_template_get_icon      (ObsCollectionTemplate  *self);
-void                   obs_collection_template_create_async  (ObsCollectionTemplate  *self,
-                                                              const char             *collection_name,
-                                                              GCancellable           *cancellable,
-                                                              GAsyncReadyCallback     callback,
-                                                              gpointer                user_data);
-gpointer               obs_collection_template_create_finish (ObsCollectionTemplate  *self,
-                                                              GAsyncResult           *result,
-                                                              GError                **error);
-
+ObsCollectionTemplate *
+obs_collection_template_new(const char *id, const char *name, GError **error);
+const char *obs_collection_template_get_id(ObsCollectionTemplate *self);
+const char *obs_collection_template_get_name(ObsCollectionTemplate *self);
+GdkPaintable *obs_collection_template_get_icon(ObsCollectionTemplate *self);
+void obs_collection_template_create_async(ObsCollectionTemplate *self,
+					  const char *collection_name,
+					  GCancellable *cancellable,
+					  GAsyncReadyCallback callback,
+					  gpointer user_data);
+gpointer obs_collection_template_create_finish(ObsCollectionTemplate *self,
+					       GAsyncResult *result,
+					       GError **error);
 
 G_END_DECLS

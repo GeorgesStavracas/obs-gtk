@@ -22,48 +22,45 @@
 
 #include "obs-style-manager.h"
 
-struct _ObsThemeCard
-{
+struct _ObsThemeCard {
 	GtkFlowBoxChild parent_instance;
 
 	GtkWidget *card;
 	GtkLabel *name_label;
 };
 
-G_DEFINE_FINAL_TYPE (ObsThemeCard, obs_theme_card, GTK_TYPE_FLOW_BOX_CHILD)
+G_DEFINE_FINAL_TYPE(ObsThemeCard, obs_theme_card, GTK_TYPE_FLOW_BOX_CHILD)
 
-static void
-obs_theme_card_class_init (ObsThemeCardClass *klass)
+static void obs_theme_card_class_init(ObsThemeCardClass *klass)
 {
-	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-	gtk_widget_class_set_template_from_resource(widget_class, "/com/obsproject/Studio/GTK4/ui/preferences/obs-theme-card.ui");
+	gtk_widget_class_set_template_from_resource(
+		widget_class,
+		"/com/obsproject/Studio/GTK4/ui/preferences/obs-theme-card.ui");
 
 	gtk_widget_class_bind_template_child(widget_class, ObsThemeCard, card);
-	gtk_widget_class_bind_template_child(widget_class, ObsThemeCard, name_label);
+	gtk_widget_class_bind_template_child(widget_class, ObsThemeCard,
+					     name_label);
 
 	gtk_widget_class_set_css_name(widget_class, "themepreviewcard");
 }
 
-static void
-obs_theme_card_init (ObsThemeCard *self)
+static void obs_theme_card_init(ObsThemeCard *self)
 {
-	gtk_widget_init_template (GTK_WIDGET (self));
+	gtk_widget_init_template(GTK_WIDGET(self));
 }
 
-GtkWidget *
-obs_theme_card_new (const char *name,
-                    const char *theme_path)
+GtkWidget *obs_theme_card_new(const char *name, const char *theme_path)
 {
 	ObsStyleManager *style_manager;
 	ObsThemeCard *theme_card;
 
-	theme_card = g_object_new (OBS_TYPE_THEME_CARD, NULL);
+	theme_card = g_object_new(OBS_TYPE_THEME_CARD, NULL);
 	gtk_label_set_label(theme_card->name_label, name);
 
 	style_manager = obs_style_manager_get_default();
-	obs_style_manager_load_style_to_widget(style_manager,
-					       theme_card->card,
+	obs_style_manager_load_style_to_widget(style_manager, theme_card->card,
 					       theme_path);
 
 	return GTK_WIDGET(theme_card);

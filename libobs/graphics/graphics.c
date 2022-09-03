@@ -1932,18 +1932,19 @@ void gs_load_swapchain(gs_swapchain_t *swapchain)
 }
 
 bool gs_swapchain_acquire_texture(gs_swapchain_t *swapchain,
-                                  struct gs_display_texture *texture)
+				  struct gs_display_texture *texture)
 {
 	graphics_t *graphics = thread_graphics;
 
 	if (!gs_valid("gs_swapchain_acquire_texture"))
 		return false;
 
-	return graphics->exports.device_swapchain_acquire_texture(swapchain, texture);
+	return graphics->exports.device_swapchain_acquire_texture(swapchain,
+								  texture);
 }
 
 void gs_swapchain_release_texture(gs_swapchain_t *swapchain,
-                                  struct gs_display_texture *texture)
+				  struct gs_display_texture *texture)
 {
 	graphics_t *graphics = thread_graphics;
 

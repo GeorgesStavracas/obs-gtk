@@ -23,8 +23,7 @@
 #include <sys/mman.h>
 #include <string.h>
 
-struct obs_hotkeys_platform {
-};
+struct obs_hotkeys_platform {};
 
 void obs_nix_drm_log_info(void) {}
 
