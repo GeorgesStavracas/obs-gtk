@@ -12,7 +12,7 @@ task:
   - pkg install -y
     alsa-lib
     v4l_compat swig ffmpeg curl dbus fdk-aac fontconfig
-    freetype2 jackit jansson luajit mbedtls pulseaudio speexdsp
+    freetype2 jansson luajit mbedtls pulseaudio speexdsp
     libpci librist libsysinfo libudev-devd libv4l libx264 cmake ninja
     mesa-libs lua52 pkgconf
     srt

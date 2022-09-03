@@ -99,7 +99,6 @@ macro(setup_obs_project)
 
   if(BUILD_FOR_PPA)
     set_option(ENABLE_LIBFDK ON)
-    set_option(ENABLE_JACK ON)
     set_option(ENABLE_RTMPS ON)
   endif()
 
