@@ -3,10 +3,10 @@ name: Clang Format Check
 on:
   push:
     paths-ignore: ['**.md']
-    branches-ignore: [master]
+    branches-ignore: [main]
   pull_request:
     paths-ignore: ['**.md']
-    branches-ignore: [master]
+    branches-ignore: [main]
 
 jobs:
   clang-format-check:
