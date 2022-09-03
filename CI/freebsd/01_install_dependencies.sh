@@ -52,7 +52,7 @@ install_dependencies() {
         "obs-deps ffmpeg libx264 mbedtls mesa-libs jansson lua52 luajit python37 libX11 xorgproto libxcb \
          libXcomposite libXext libXfixes libXinerama libXrandr swig dbus jansson libICE libSM libsysinfo"
         "qt-deps qt5-buildtools qt5-qmake qt5-imageformats qt5-core qt5-gui qt5-svg qt5-widgets qt5-xml"
-        "plugin-deps v4l_compat fdk-aac fontconfig freetype2 speexdsp libudev-devd libv4l vlc audio/jack pulseaudio sndio"
+        "plugin-deps v4l_compat fdk-aac fontconfig freetype2 speexdsp libudev-devd libv4l vlc pulseaudio sndio"
     )
 
     for DEPENDENCY in "${BUILD_DEPS[@]}"; do
