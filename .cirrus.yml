@@ -11,9 +11,9 @@ task:
   install_script:
   - pkg install -y
     alsa-lib
-    v4l_compat swig ffmpeg curl dbus fdk-aac fontconfig
+    swig ffmpeg curl dbus fdk-aac fontconfig
     freetype2 jansson luajit mbedtls pulseaudio speexdsp
-    libpci librist libsysinfo libudev-devd libv4l libx264 cmake ninja
+    libpci librist libsysinfo libudev-devd libx264 cmake ninja
     mesa-libs lua52 pkgconf
     srt
     qt5-svg qt5-qmake qt5-buildtools qt5-x11extras qt5-xml

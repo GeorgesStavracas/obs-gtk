@@ -61,28 +61,7 @@
           "commit": "66a5bc1bd1563d8227d5d18440b525a09bcf17ca"
         }
       ]
-    },
-    {
-      "name": "v4l-utils",
-      "config-opts": [
-        "--disable-static",
-        "--disable-doxygen-doc",
-        "--disable-libdvbv5",
-        "--disable-v4l-utils",
-        "--disable-qv4l2",
-        "--with-udevdir=/app/lib/udev/"
-      ],
-      "cleanup": [
-        "/include"
-      ],
-      "sources": [
-        {
-          "type": "archive",
-          "url": "https://linuxtv.org/downloads/v4l-utils/v4l-utils-1.22.0.tar.bz2",
-          "sha256": "1069e5d7909bcc563baeaadc3a5c496f0e658524c413cf7818816e37bfcea344"
-        }
-      ]
-    },
+    }
     {
       "name": "nv-codec-headers",
       "no-autogen": true,
