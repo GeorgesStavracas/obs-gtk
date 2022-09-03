@@ -95,7 +95,7 @@ install_dependencies() {
         "qt6-deps qt6-base-dev qt6-base-private-dev libqt6svg6-dev qt6-wayland"
         "cef ${LINUX_CEF_BUILD_VERSION:-${CI_LINUX_CEF_VERSION}}"
         "plugin-deps libasound2-dev libfdk-aac-dev libfontconfig-dev libfreetype6-dev \
-         libpulse-dev libsndio-dev libspeexdsp-dev libudev-dev libv4l-dev libva-dev libvlc-dev libdrm-dev"
+         libpulse-dev libsndio-dev libspeexdsp-dev libudev-dev libva-dev libvlc-dev libdrm-dev"
     )
 
     sudo dpkg --add-architecture amd64
