@@ -25,16 +25,18 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_DISPLAY_RENDERER (obs_display_renderer_get_type())
-G_DECLARE_FINAL_TYPE (ObsDisplayRenderer, obs_display_renderer, OBS, DISPLAY_RENDERER, GtkMediaStream)
+G_DECLARE_FINAL_TYPE(ObsDisplayRenderer, obs_display_renderer, OBS,
+		     DISPLAY_RENDERER, GtkMediaStream)
 
-typedef void (*ObsDisplayDrawFunc)(void *param, uint32_t width, uint32_t height);
+typedef void (*ObsDisplayDrawFunc)(void *param, uint32_t width,
+				   uint32_t height);
 
-ObsDisplayRenderer *obs_display_renderer_new                  (void);
-void                obs_display_renderer_add_draw_callback    (ObsDisplayRenderer *self,
-                                                               ObsDisplayDrawFunc  draw_func,
-                                                               gpointer            user_data);
-void                obs_display_renderer_remove_draw_callback (ObsDisplayRenderer *self,
-                                                               ObsDisplayDrawFunc  draw_func,
-                                                               gpointer            user_data);
+ObsDisplayRenderer *obs_display_renderer_new(void);
+void obs_display_renderer_add_draw_callback(ObsDisplayRenderer *self,
+					    ObsDisplayDrawFunc draw_func,
+					    gpointer user_data);
+void obs_display_renderer_remove_draw_callback(ObsDisplayRenderer *self,
+					       ObsDisplayDrawFunc draw_func,
+					       gpointer user_data);
 
 G_END_DECLS

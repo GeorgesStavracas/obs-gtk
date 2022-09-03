@@ -27,20 +27,16 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_VOLUME_BAR (obs_volume_bar_get_type())
-G_DECLARE_FINAL_TYPE (ObsVolumeBar, obs_volume_bar, OBS, VOLUME_BAR, GtkWidget)
+G_DECLARE_FINAL_TYPE(ObsVolumeBar, obs_volume_bar, OBS, VOLUME_BAR, GtkWidget)
 
-GtkWidget *obs_volume_bar_new           (void);
-void       obs_volume_bar_get_range     (ObsVolumeBar *self,
-                                         double       *out_minimum,
-                                         double       *out_maximum);
-void       obs_volume_bar_set_range     (ObsVolumeBar *self,
-                                         double        minimum,
-                                         double        maximum);
-double     obs_volume_bar_get_value     (ObsVolumeBar *self);
-void       obs_volume_bar_set_value     (ObsVolumeBar *self,
-                                         double        value);
-double     obs_volume_bar_get_magnitude (ObsVolumeBar *self);
-void       obs_volume_bar_set_magnitude (ObsVolumeBar *self,
-                                         double        magnitude);
+GtkWidget *obs_volume_bar_new(void);
+void obs_volume_bar_get_range(ObsVolumeBar *self, double *out_minimum,
+			      double *out_maximum);
+void obs_volume_bar_set_range(ObsVolumeBar *self, double minimum,
+			      double maximum);
+double obs_volume_bar_get_value(ObsVolumeBar *self);
+void obs_volume_bar_set_value(ObsVolumeBar *self, double value);
+double obs_volume_bar_get_magnitude(ObsVolumeBar *self);
+void obs_volume_bar_set_magnitude(ObsVolumeBar *self, double magnitude);
 
 G_END_DECLS

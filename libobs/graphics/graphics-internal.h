@@ -130,10 +130,10 @@ struct gs_exports {
 	void (*device_end_scene)(gs_device_t *device);
 	void (*device_load_swapchain)(gs_device_t *device,
 				      gs_swapchain_t *swaphchain);
-	bool (*device_swapchain_acquire_texture)(gs_swapchain_t *swaphchain,
-						 struct gs_display_texture *texture);
-	void (*device_swapchain_release_texture)(gs_swapchain_t *swaphchain,
-						 struct gs_display_texture *texture);
+	bool (*device_swapchain_acquire_texture)(
+		gs_swapchain_t *swaphchain, struct gs_display_texture *texture);
+	void (*device_swapchain_release_texture)(
+		gs_swapchain_t *swaphchain, struct gs_display_texture *texture);
 	void (*device_clear)(gs_device_t *device, uint32_t clear_flags,
 			     const struct vec4 *color, float depth,
 			     uint8_t stencil);

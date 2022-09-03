@@ -20,23 +20,22 @@
 
 #include "obs-activities-page.h"
 
-struct _ObsActivitiesPage
-{
+struct _ObsActivitiesPage {
 	AdwBin parent_instance;
 };
 
-G_DEFINE_FINAL_TYPE (ObsActivitiesPage, obs_activities_page, ADW_TYPE_BIN)
+G_DEFINE_FINAL_TYPE(ObsActivitiesPage, obs_activities_page, ADW_TYPE_BIN)
 
-static void
-obs_activities_page_class_init (ObsActivitiesPageClass *klass)
+static void obs_activities_page_class_init(ObsActivitiesPageClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-	gtk_widget_class_set_template_from_resource(widget_class, "/com/obsproject/Studio/GTK4/ui/obs-activities-page.ui");
+	gtk_widget_class_set_template_from_resource(
+		widget_class,
+		"/com/obsproject/Studio/GTK4/ui/obs-activities-page.ui");
 }
 
-static void
-obs_activities_page_init (ObsActivitiesPage *self)
+static void obs_activities_page_init(ObsActivitiesPage *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
 }

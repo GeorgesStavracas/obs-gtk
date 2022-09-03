@@ -27,15 +27,15 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_DISPLAY_WIDGET (obs_display_widget_get_type())
-G_DECLARE_FINAL_TYPE (ObsDisplayWidget, obs_display_widget, OBS, DISPLAY_WIDGET, GtkWidget)
+G_DECLARE_FINAL_TYPE(ObsDisplayWidget, obs_display_widget, OBS, DISPLAY_WIDGET,
+		     GtkWidget)
 
-ObsDisplayWidget *obs_display_widget_new                  (void);
-void              obs_display_widget_add_draw_callback    (ObsDisplayWidget   *self,
-                                                           ObsDisplayDrawFunc  draw_func,
-                                                           gpointer            user_data);
-void              obs_display_widget_remove_draw_callback (ObsDisplayWidget   *self,
-                                                           ObsDisplayDrawFunc  draw_func,
-                                                           gpointer            user_data);
-
+ObsDisplayWidget *obs_display_widget_new(void);
+void obs_display_widget_add_draw_callback(ObsDisplayWidget *self,
+					  ObsDisplayDrawFunc draw_func,
+					  gpointer user_data);
+void obs_display_widget_remove_draw_callback(ObsDisplayWidget *self,
+					     ObsDisplayDrawFunc draw_func,
+					     gpointer user_data);
 
 G_END_DECLS

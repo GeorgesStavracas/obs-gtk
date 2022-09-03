@@ -25,8 +25,9 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_PREFERENCES_DIALOG (obs_preferences_dialog_get_type())
-G_DECLARE_FINAL_TYPE (ObsPreferencesDialog, obs_preferences_dialog, OBS, PREFERENCES_DIALOG, AdwWindow)
+G_DECLARE_FINAL_TYPE(ObsPreferencesDialog, obs_preferences_dialog, OBS,
+		     PREFERENCES_DIALOG, AdwWindow)
 
-GtkWidget * obs_preferences_dialog_new (void);
+GtkWidget *obs_preferences_dialog_new(void);
 
 G_END_DECLS

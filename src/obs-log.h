@@ -24,6 +24,6 @@
 
 G_BEGIN_DECLS
 
-void obs_log_init (void);
+void obs_log_init(void);
 
 G_END_DECLS

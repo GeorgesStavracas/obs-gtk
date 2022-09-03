@@ -25,6 +25,7 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_APPEARANCE_PAGE (obs_appearance_page_get_type())
-G_DECLARE_FINAL_TYPE (ObsAppearancePage, obs_appearance_page, OBS, APPEARANCE_PAGE, AdwBin)
+G_DECLARE_FINAL_TYPE(ObsAppearancePage, obs_appearance_page, OBS,
+		     APPEARANCE_PAGE, AdwBin)
 
 G_END_DECLS

@@ -20,8 +20,7 @@
 
 #include "obs-audio-device.h"
 
-struct _ObsAudioDevice
-{
+struct _ObsAudioDevice {
 	GObject parent_instance;
 
 	GMutex mutex;
@@ -34,7 +33,7 @@ struct _ObsAudioDevice
 	guint idle_update_id;
 };
 
-G_DEFINE_FINAL_TYPE (ObsAudioDevice, obs_audio_device, G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE(ObsAudioDevice, obs_audio_device, G_TYPE_OBJECT)
 
 enum {
 	PROP_0,
@@ -46,24 +45,25 @@ enum {
 	N_PROPS,
 };
 
-static GParamSpec *properties [N_PROPS];
+static GParamSpec *properties[N_PROPS];
 
-static gboolean
-update_in_idle_cb(gpointer data)
+static gboolean update_in_idle_cb(gpointer data)
 {
 	ObsAudioDevice *self = OBS_AUDIO_DEVICE(data);
 
 	g_mutex_lock(&self->mutex);
 
-	if (!G_APPROX_VALUE(self->volume, obs_source_get_volume(self->source), FLT_EPSILON)) {
+	if (!G_APPROX_VALUE(self->volume, obs_source_get_volume(self->source),
+			    FLT_EPSILON)) {
 		self->volume = obs_source_get_volume(self->source);
-		g_object_notify_by_pspec(G_OBJECT(self), properties[PROP_VOLUME]);
+		g_object_notify_by_pspec(G_OBJECT(self),
+					 properties[PROP_VOLUME]);
 	}
-
 
 	if (self->muted != obs_source_muted(self->source)) {
 		self->muted = obs_source_muted(self->source);
-		g_object_notify_by_pspec(G_OBJECT(self), properties[PROP_MUTED]);
+		g_object_notify_by_pspec(G_OBJECT(self),
+					 properties[PROP_MUTED]);
 	}
 
 	self->idle_update_id = 0;
@@ -73,8 +73,7 @@ update_in_idle_cb(gpointer data)
 	return G_SOURCE_REMOVE;
 }
 
-static void
-on_source_changed_cb(void *data, calldata_t *calldata)
+static void on_source_changed_cb(void *data, calldata_t *calldata)
 {
 	ObsAudioDevice *self = OBS_AUDIO_DEVICE(data);
 
@@ -86,8 +85,7 @@ on_source_changed_cb(void *data, calldata_t *calldata)
 	g_mutex_unlock(&self->mutex);
 }
 
-static void
-obs_audio_device_dispose (GObject *object)
+static void obs_audio_device_dispose(GObject *object)
 {
 	ObsAudioDevice *self = OBS_AUDIO_DEVICE(object);
 
@@ -97,13 +95,10 @@ obs_audio_device_dispose (GObject *object)
 	G_OBJECT_CLASS(obs_audio_device_parent_class)->dispose(object);
 }
 
-static void
-obs_audio_device_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
+static void obs_audio_device_get_property(GObject *object, guint prop_id,
+					  GValue *value, GParamSpec *pspec)
 {
-	ObsAudioDevice *self = OBS_AUDIO_DEVICE (object);
+	ObsAudioDevice *self = OBS_AUDIO_DEVICE(object);
 
 	switch (prop_id) {
 	case PROP_DEVICE_TYPE:
@@ -122,17 +117,15 @@ obs_audio_device_get_property (GObject    *object,
 		g_value_set_float(value, self->volume);
 		break;
 	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 	}
 }
 
-static void
-obs_audio_device_set_property (GObject      *object,
-                               guint         prop_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
+static void obs_audio_device_set_property(GObject *object, guint prop_id,
+					  const GValue *value,
+					  GParamSpec *pspec)
 {
-	ObsAudioDevice *self = OBS_AUDIO_DEVICE (object);
+	ObsAudioDevice *self = OBS_AUDIO_DEVICE(object);
 
 	switch (prop_id) {
 	case PROP_DEVICE_TYPE:
@@ -143,109 +136,95 @@ obs_audio_device_set_property (GObject      *object,
 		break;
 	case PROP_SOURCE:
 		self->source = obs_source_get_ref(g_value_get_pointer(value));
-		signal_handler_connect(obs_source_get_signal_handler(self->source),
-				       "mute",
-				       on_source_changed_cb,
-				       self);
-		signal_handler_connect(obs_source_get_signal_handler(self->source),
-				       "volume",
-				       on_source_changed_cb,
-				       self);
-		obs_audio_device_set_muted(self, obs_source_muted(self->source));
-		obs_audio_device_set_volume(self, obs_source_get_volume(self->source));
+		signal_handler_connect(
+			obs_source_get_signal_handler(self->source), "mute",
+			on_source_changed_cb, self);
+		signal_handler_connect(
+			obs_source_get_signal_handler(self->source), "volume",
+			on_source_changed_cb, self);
+		obs_audio_device_set_muted(self,
+					   obs_source_muted(self->source));
+		obs_audio_device_set_volume(
+			self, obs_source_get_volume(self->source));
 		break;
 	case PROP_VOLUME:
 		obs_audio_device_set_volume(self, g_value_get_float(value));
 		break;
 	default:
-		G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+		G_OBJECT_WARN_INVALID_PROPERTY_ID(object, prop_id, pspec);
 	}
 }
 
-
-static void
-obs_audio_device_class_init (ObsAudioDeviceClass *klass)
+static void obs_audio_device_class_init(ObsAudioDeviceClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
 	object_class->dispose = obs_audio_device_dispose;
 	object_class->get_property = obs_audio_device_get_property;
 	object_class->set_property = obs_audio_device_set_property;
 
 	properties[PROP_DEVICE_TYPE] =
-		g_param_spec_int("device-type", NULL, NULL,
-				 0, G_MAXINT, 0,
-				 G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+		g_param_spec_int("device-type", NULL, NULL, 0, G_MAXINT, 0,
+				 G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+					 G_PARAM_STATIC_STRINGS);
 
-	properties[PROP_MUTED] =
-		g_param_spec_boolean("muted", NULL, NULL,
-				     FALSE,
-				     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+	properties[PROP_MUTED] = g_param_spec_boolean(
+		"muted", NULL, NULL, FALSE,
+		G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
 	properties[PROP_NAME] =
-		g_param_spec_string("name", NULL, NULL,
-				    NULL,
+		g_param_spec_string("name", NULL, NULL, NULL,
 				    G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
-	properties[PROP_SOURCE] =
-		g_param_spec_pointer("source", NULL, NULL,
-				     G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+	properties[PROP_SOURCE] = g_param_spec_pointer(
+		"source", NULL, NULL,
+		G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY |
+			G_PARAM_STATIC_STRINGS);
 
 	properties[PROP_VOLUME] =
-		g_param_spec_float("volume", NULL, NULL,
-				   0.0, 1.0, 0.0,
+		g_param_spec_float("volume", NULL, NULL, 0.0, 1.0, 0.0,
 				   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
 	g_object_class_install_properties(object_class, N_PROPS, properties);
 }
 
-static void
-obs_audio_device_init (ObsAudioDevice *self)
+static void obs_audio_device_init(ObsAudioDevice *self)
 {
 	g_mutex_init(&self->mutex);
 }
 
-ObsAudioDevice *
-obs_audio_device_new (ObsAudioDeviceType  device_type,
-                      obs_source_t       *source)
+ObsAudioDevice *obs_audio_device_new(ObsAudioDeviceType device_type,
+				     obs_source_t *source)
 {
-	return g_object_new (OBS_TYPE_AUDIO_DEVICE,
-			     "device-type", device_type,
-			     "source", source,
-			     NULL);
+	return g_object_new(OBS_TYPE_AUDIO_DEVICE, "device-type", device_type,
+			    "source", source, NULL);
 }
 
-ObsAudioDeviceType
-obs_audio_device_get_device_type (ObsAudioDevice *self)
+ObsAudioDeviceType obs_audio_device_get_device_type(ObsAudioDevice *self)
 {
-	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE (self), 0);
+	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE(self), 0);
 	return self->device_type;
 }
 
-obs_source_t *
-obs_audio_device_get_source (ObsAudioDevice *self)
+obs_source_t *obs_audio_device_get_source(ObsAudioDevice *self)
 {
-	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE (self), NULL);
+	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE(self), NULL);
 	return self->source;
 }
 
-const char *
-obs_audio_device_get_name (ObsAudioDevice *self)
+const char *obs_audio_device_get_name(ObsAudioDevice *self)
 {
-	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE (self), NULL);
+	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE(self), NULL);
 	return obs_source_get_name(self->source);
 }
 
-float
-obs_audio_device_get_volume (ObsAudioDevice *self)
+float obs_audio_device_get_volume(ObsAudioDevice *self)
 {
 	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE(self), 0.0);
 	return self->volume;
 }
 
-void
-obs_audio_device_set_volume (ObsAudioDevice *self,
-                             float           volume)
+void obs_audio_device_set_volume(ObsAudioDevice *self, float volume)
 {
 	g_return_if_fail(OBS_IS_AUDIO_DEVICE(self));
 
@@ -257,16 +236,13 @@ obs_audio_device_set_volume (ObsAudioDevice *self,
 	g_object_notify_by_pspec(G_OBJECT(self), properties[PROP_VOLUME]);
 }
 
-gboolean
-obs_audio_device_get_muted (ObsAudioDevice *self)
+gboolean obs_audio_device_get_muted(ObsAudioDevice *self)
 {
-	g_return_val_if_fail (OBS_IS_AUDIO_DEVICE (self), FALSE);
+	g_return_val_if_fail(OBS_IS_AUDIO_DEVICE(self), FALSE);
 	return self->muted;
 }
 
-void
-obs_audio_device_set_muted (ObsAudioDevice *self,
-                            gboolean        muted)
+void obs_audio_device_set_muted(ObsAudioDevice *self, gboolean muted)
 {
 	g_return_if_fail(OBS_IS_AUDIO_DEVICE(self));
 
@@ -277,4 +253,3 @@ obs_audio_device_set_muted (ObsAudioDevice *self,
 	obs_source_set_muted(self->source, muted);
 	g_object_notify_by_pspec(G_OBJECT(self), properties[PROP_MUTED]);
 }
-

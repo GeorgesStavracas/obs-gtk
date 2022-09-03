@@ -26,14 +26,15 @@
 
 G_BEGIN_DECLS
 
-#define OBS_TYPE_COLLECTION_TEMPLATE_ICON (obs_collection_template_icon_get_type())
-G_DECLARE_FINAL_TYPE (ObsCollectionTemplateIcon, obs_collection_template_icon,
-		      OBS, COLLECTION_TEMPLATE_ICON,
-		      GtkFlowBoxChild)
+#define OBS_TYPE_COLLECTION_TEMPLATE_ICON \
+	(obs_collection_template_icon_get_type())
+G_DECLARE_FINAL_TYPE(ObsCollectionTemplateIcon, obs_collection_template_icon,
+		     OBS, COLLECTION_TEMPLATE_ICON, GtkFlowBoxChild)
 
-GtkWidget * obs_collection_template_icon_new (ObsCollectionTemplate *collection_template);
+GtkWidget *
+obs_collection_template_icon_new(ObsCollectionTemplate *collection_template);
 
-ObsCollectionTemplate *
-obs_collection_template_icon_get_collection_template (ObsCollectionTemplateIcon *self);
+ObsCollectionTemplate *obs_collection_template_icon_get_collection_template(
+	ObsCollectionTemplateIcon *self);
 
 G_END_DECLS

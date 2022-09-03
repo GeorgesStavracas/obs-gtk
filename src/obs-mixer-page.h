@@ -25,6 +25,6 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_MIXER_PAGE (obs_mixer_page_get_type())
-G_DECLARE_FINAL_TYPE (ObsMixerPage, obs_mixer_page, OBS, MIXER_PAGE, AdwBin)
+G_DECLARE_FINAL_TYPE(ObsMixerPage, obs_mixer_page, OBS, MIXER_PAGE, AdwBin)
 
 G_END_DECLS

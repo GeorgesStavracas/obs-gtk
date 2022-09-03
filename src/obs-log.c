@@ -26,18 +26,13 @@
 #include <unistd.h>
 #include <glib.h>
 
-G_LOCK_DEFINE_STATIC (channel_lock);
+G_LOCK_DEFINE_STATIC(channel_lock);
 
 GIOChannel *standard_channel = NULL;
 
-static const char* ignored_domains[] =
-{
-  "GdkPixbuf",
-  NULL
-};
+static const char *ignored_domains[] = {"GdkPixbuf", NULL};
 
-static const char *
-log_level_str (GLogLevelFlags log_level)
+static const char *log_level_str(GLogLevelFlags log_level)
 {
 	switch (((gulong)log_level & G_LOG_LEVEL_MASK)) {
 	case G_LOG_LEVEL_ERROR:
@@ -59,35 +54,30 @@ log_level_str (GLogLevelFlags log_level)
 	}
 }
 
-static void
-obs_log_handler(const char     *domain,
-		GLogLevelFlags  log_level,
-		const char     *message,
-		gpointer        user_data)
+static void obs_log_handler(const char *domain, GLogLevelFlags log_level,
+			    const char *message, gpointer user_data)
 {
 	g_autofree char *buffer = NULL;
 	const char *level;
 
 	/* Skip ignored log domains */
-	if (domain && g_strv_contains (ignored_domains, domain))
+	if (domain && g_strv_contains(ignored_domains, domain))
 		return;
 
-	level = log_level_str (log_level);
-	buffer = g_strdup_printf ("%s: %s: %s\n", domain, level, message);
+	level = log_level_str(log_level);
+	buffer = g_strdup_printf("%s: %s: %s\n", domain, level, message);
 
 	/* Safely write to the channel */
-	G_LOCK (channel_lock);
+	G_LOCK(channel_lock);
 
-	g_io_channel_write_chars (standard_channel, buffer, -1, NULL, NULL);
-	g_io_channel_flush (standard_channel, NULL);
+	g_io_channel_write_chars(standard_channel, buffer, -1, NULL, NULL);
+	g_io_channel_flush(standard_channel, NULL);
 
-	G_UNLOCK (channel_lock);
+	G_UNLOCK(channel_lock);
 }
 
-static void log_obs_message_func(int         log_level,
-                                 const char *message,
-                                 va_list     args,
-                                 void       *data)
+static void log_obs_message_func(int log_level, const char *message,
+				 va_list args, void *data)
 {
 	GLogLevelFlags g_log_level = G_LOG_LEVEL_MESSAGE;
 
@@ -113,10 +103,10 @@ void obs_log_init(void)
 {
 	static gsize initialized = FALSE;
 
-	if (g_once_init_enter (&initialized)) {
-		standard_channel = g_io_channel_unix_new (STDOUT_FILENO);
-		g_log_set_default_handler (obs_log_handler, NULL);
-		g_once_init_leave (&initialized, TRUE);
+	if (g_once_init_enter(&initialized)) {
+		standard_channel = g_io_channel_unix_new(STDOUT_FILENO);
+		g_log_set_default_handler(obs_log_handler, NULL);
+		g_once_init_leave(&initialized, TRUE);
 		base_set_log_handler(log_obs_message_func, NULL);
 	}
 }

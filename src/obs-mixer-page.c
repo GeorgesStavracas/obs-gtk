@@ -24,29 +24,29 @@
 #include "obs-application.h"
 #include "obs-audio-controller.h"
 
-struct _ObsMixerPage
-{
+struct _ObsMixerPage {
 	AdwBin parent_instance;
 
 	GtkNoSelection *no_selection_model;
 };
 
-G_DEFINE_FINAL_TYPE (ObsMixerPage, obs_mixer_page, ADW_TYPE_BIN)
+G_DEFINE_FINAL_TYPE(ObsMixerPage, obs_mixer_page, ADW_TYPE_BIN)
 
-static void
-obs_mixer_page_class_init (ObsMixerPageClass *klass)
+static void obs_mixer_page_class_init(ObsMixerPageClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
 	g_type_ensure(OBS_TYPE_AUDIO_DEVICE_CONTROLS);
 
-	gtk_widget_class_set_template_from_resource(widget_class, "/com/obsproject/Studio/GTK4/ui/obs-mixer-page.ui");
+	gtk_widget_class_set_template_from_resource(
+		widget_class,
+		"/com/obsproject/Studio/GTK4/ui/obs-mixer-page.ui");
 
-	gtk_widget_class_bind_template_child(widget_class, ObsMixerPage, no_selection_model);
+	gtk_widget_class_bind_template_child(widget_class, ObsMixerPage,
+					     no_selection_model);
 }
 
-static void
-obs_mixer_page_init (ObsMixerPage *self)
+static void obs_mixer_page_init(ObsMixerPage *self)
 {
 	ObsAudioController *audio_controller;
 	GApplication *application;
@@ -55,7 +55,9 @@ obs_mixer_page_init (ObsMixerPage *self)
 	gtk_widget_init_template(GTK_WIDGET(self));
 
 	application = g_application_get_default();
-	audio_controller = obs_application_get_audio_controller(OBS_APPLICATION(application));
-	gtk_no_selection_set_model(self->no_selection_model,
-				   obs_audio_controller_get_devices(audio_controller));
+	audio_controller = obs_application_get_audio_controller(
+		OBS_APPLICATION(application));
+	gtk_no_selection_set_model(
+		self->no_selection_model,
+		obs_audio_controller_get_devices(audio_controller));
 }

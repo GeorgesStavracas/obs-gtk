@@ -130,10 +130,12 @@ EXPORT void device_draw(gs_device_t *device, enum gs_draw_mode draw_mode,
 EXPORT void device_end_scene(gs_device_t *device);
 EXPORT void device_load_swapchain(gs_device_t *device,
 				  gs_swapchain_t *swapchain);
-EXPORT bool device_swapchain_acquire_texture(gs_swapchain_t *swapchain,
-					     struct gs_display_texture *texture);
-EXPORT void device_swapchain_release_texture(gs_swapchain_t *swapchain,
-					     struct gs_display_texture *texture);
+EXPORT bool
+device_swapchain_acquire_texture(gs_swapchain_t *swapchain,
+				 struct gs_display_texture *texture);
+EXPORT void
+device_swapchain_release_texture(gs_swapchain_t *swapchain,
+				 struct gs_display_texture *texture);
 EXPORT void device_clear(gs_device_t *device, uint32_t clear_flags,
 			 const struct vec4 *color, float depth,
 			 uint8_t stencil);

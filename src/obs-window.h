@@ -25,8 +25,8 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_WINDOW (obs_window_get_type())
-G_DECLARE_FINAL_TYPE (ObsWindow, obs_window, OBS, WINDOW, AdwApplicationWindow)
+G_DECLARE_FINAL_TYPE(ObsWindow, obs_window, OBS, WINDOW, AdwApplicationWindow)
 
-ObsWindow * obs_window_new (GApplication *application);
+ObsWindow *obs_window_new(GApplication *application);
 
 G_END_DECLS

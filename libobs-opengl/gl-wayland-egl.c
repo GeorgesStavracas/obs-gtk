@@ -113,7 +113,8 @@ gl_wayland_egl_windowinfo_create(const struct gs_init_data *info)
 
 	switch (info->render_mode) {
 	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
-		wi->window = wl_egl_window_create(info->window.display, info->cx, info->cy);
+		wi->window = wl_egl_window_create(info->window.display,
+						  info->cx, info->cy);
 		if (wi->window == NULL) {
 			blog(LOG_ERROR, "wl_egl_window_create failed");
 			bfree(wi);
@@ -169,9 +170,10 @@ static bool egl_context_create(struct gl_platform *plat, const EGLint *attribs)
 		result = eglChooseConfig(plat->display, config_attribs,
 					 &plat->config, 1, &num_config);
 		if (result != EGL_TRUE || num_config == 0) {
-			blog(LOG_ERROR, "eglChooseConfig failed: %s (result: %d, n configs: %d)",
-			     gl_egl_error_to_string(eglGetError()),
-			     result, num_config);
+			blog(LOG_ERROR,
+			     "eglChooseConfig failed: %s (result: %d, n configs: %d)",
+			     gl_egl_error_to_string(eglGetError()), result,
+			     num_config);
 			goto error;
 		}
 	}
@@ -285,7 +287,7 @@ static bool gl_wayland_egl_platform_init_swapchain(struct gs_swap_chain *swap)
 {
 	struct gl_platform *plat = swap->device->plat;
 
-	switch(swap->wi->render_mode) {
+	switch (swap->wi->render_mode) {
 	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
 		swap->wi->egl_surface = eglCreateWindowSurface(
 			plat->display, plat->config, swap->wi->window, NULL);
@@ -303,21 +305,19 @@ static bool gl_wayland_egl_platform_init_swapchain(struct gs_swap_chain *swap)
 
 		glGenTextures(1, &swap->wi->tex.gl[0]);
 		glBindTexture(GL_TEXTURE_2D, swap->wi->tex.gl[0]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		swap->wi->tex.egl[0] = eglCreateImage(plat->display,
-						      plat->context,
-						      EGL_GL_TEXTURE_2D,
-						      (EGLClientBuffer)(uint64_t)swap->wi->tex.gl[0],
-						      NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA,
+			     GL_UNSIGNED_BYTE, NULL);
+		swap->wi->tex.egl[0] = eglCreateImage(
+			plat->display, plat->context, EGL_GL_TEXTURE_2D,
+			(EGLClientBuffer)(uint64_t)swap->wi->tex.gl[0], NULL);
 
 		glGenTextures(1, &swap->wi->tex.gl[1]);
 		glBindTexture(GL_TEXTURE_2D, swap->wi->tex.gl[1]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-		swap->wi->tex.egl[1] = eglCreateImage(plat->display,
-						      plat->context,
-						      EGL_GL_TEXTURE_2D,
-						      (EGLClientBuffer)(uint64_t)swap->wi->tex.gl[1],
-						      NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGBA,
+			     GL_UNSIGNED_BYTE, NULL);
+		swap->wi->tex.egl[1] = eglCreateImage(
+			plat->display, plat->context, EGL_GL_TEXTURE_2D,
+			(EGLClientBuffer)(uint64_t)swap->wi->tex.gl[1], NULL);
 		break;
 	}
 
@@ -354,7 +354,7 @@ static void *gl_wayland_egl_device_get_device_obj(gs_device_t *device)
 static void gl_wayland_egl_getclientsize(const struct gs_swap_chain *swap,
 					 uint32_t *width, uint32_t *height)
 {
-	switch(swap->wi->render_mode) {
+	switch (swap->wi->render_mode) {
 	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
 		wl_egl_window_get_attached_size(swap->wi->window, (void *)width,
 						(void *)height);
@@ -380,7 +380,7 @@ static void gl_wayland_egl_update(gs_device_t *device)
 
 	blog(LOG_INFO, "Resizing swapchain");
 
-	switch(swap->wi->render_mode) {
+	switch (swap->wi->render_mode) {
 	case GS_DISPLAY_RENDER_MODE_ONSCREEN:
 		wl_egl_window_resize(device->cur_swap->wi->window,
 				     device->cur_swap->info.cx,
@@ -410,8 +410,8 @@ static void gl_wayland_egl_device_load_swapchain(gs_device_t *device,
 	}
 }
 
-static bool gl_wayland_egl_device_swapchain_acquire_texture(gs_swapchain_t *swap,
-							    struct gs_display_texture *texture)
+static bool gl_wayland_egl_device_swapchain_acquire_texture(
+	gs_swapchain_t *swap, struct gs_display_texture *texture)
 {
 	struct gl_platform *plat = swap->device->plat;
 	int drm_format;
@@ -455,12 +455,12 @@ static bool gl_wayland_egl_device_swapchain_acquire_texture(gs_swapchain_t *swap
 #endif
 }
 
-static void gl_wayland_egl_device_swapchain_release_texture(gs_swapchain_t *swap,
-							    struct gs_display_texture *texture)
+static void gl_wayland_egl_device_swapchain_release_texture(
+	gs_swapchain_t *swap, struct gs_display_texture *texture)
 {
 	struct gl_platform *plat = swap->device->plat;
 
-	assert (swap->wi->render_mode == GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE);
+	assert(swap->wi->render_mode == GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE);
 #if 0
 	bfree(texture->dmabuf.fds);
 	bfree(texture->dmabuf.offsets);
@@ -480,7 +480,8 @@ static void gl_wayland_egl_device_present(gs_device_t *device)
 			blog(LOG_ERROR, "eglSwapInterval failed: %s",
 			     gl_egl_error_to_string(eglGetError()));
 		}
-		if (eglSwapBuffers(plat->display, wi->egl_surface) == EGL_FALSE) {
+		if (eglSwapBuffers(plat->display, wi->egl_surface) ==
+		    EGL_FALSE) {
 			blog(LOG_ERROR, "eglSwapBuffers failed: %s",
 			     gl_egl_error_to_string(eglGetError()));
 		}

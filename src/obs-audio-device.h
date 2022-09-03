@@ -31,18 +31,17 @@ typedef enum {
 } ObsAudioDeviceType;
 
 #define OBS_TYPE_AUDIO_DEVICE (obs_audio_device_get_type())
-G_DECLARE_FINAL_TYPE (ObsAudioDevice, obs_audio_device, OBS, AUDIO_DEVICE, GObject)
+G_DECLARE_FINAL_TYPE(ObsAudioDevice, obs_audio_device, OBS, AUDIO_DEVICE,
+		     GObject)
 
-ObsAudioDevice     *obs_audio_device_new             (ObsAudioDeviceType  device_type,
-                                                      obs_source_t       *source);
-ObsAudioDeviceType  obs_audio_device_get_device_type (ObsAudioDevice     *self);
-obs_source_t       *obs_audio_device_get_source      (ObsAudioDevice     *self);
-const char         *obs_audio_device_get_name        (ObsAudioDevice     *self);
-float               obs_audio_device_get_volume      (ObsAudioDevice     *self);
-void                obs_audio_device_set_volume      (ObsAudioDevice     *self,
-                                                      float               volume);
-gboolean            obs_audio_device_get_muted       (ObsAudioDevice     *self);
-void                obs_audio_device_set_muted       (ObsAudioDevice     *self,
-                                                      gboolean            muted);
+ObsAudioDevice *obs_audio_device_new(ObsAudioDeviceType device_type,
+				     obs_source_t *source);
+ObsAudioDeviceType obs_audio_device_get_device_type(ObsAudioDevice *self);
+obs_source_t *obs_audio_device_get_source(ObsAudioDevice *self);
+const char *obs_audio_device_get_name(ObsAudioDevice *self);
+float obs_audio_device_get_volume(ObsAudioDevice *self);
+void obs_audio_device_set_volume(ObsAudioDevice *self, float volume);
+gboolean obs_audio_device_get_muted(ObsAudioDevice *self);
+void obs_audio_device_set_muted(ObsAudioDevice *self, gboolean muted);
 
 G_END_DECLS

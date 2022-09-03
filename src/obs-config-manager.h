@@ -26,7 +26,8 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_CONFIG_MANAGER (obs_config_manager_get_type())
-G_DECLARE_FINAL_TYPE (ObsConfigManager, obs_config_manager, OBS, CONFIG_MANAGER, GObject)
+G_DECLARE_FINAL_TYPE(ObsConfigManager, obs_config_manager, OBS, CONFIG_MANAGER,
+		     GObject)
 
 typedef enum {
 	OBS_CONFIG_SCOPE_GLOBAL,
@@ -35,13 +36,11 @@ typedef enum {
 	OBS_CONFIG_SCOPE_PLUGIN,
 } ObsConfigScope;
 
-ObsConfigManager *obs_config_manager_new     (void);
-config_t         *obs_config_manager_open    (ObsConfigManager      *self,
-                                              ObsConfigScope         scope,
-                                              const char            *id,
-                                              enum config_open_type  open_type);
-void              obs_config_manager_release (ObsConfigManager      *self,
-                                              ObsConfigScope         scope,
-                                              const char            *id);
+ObsConfigManager *obs_config_manager_new(void);
+config_t *obs_config_manager_open(ObsConfigManager *self, ObsConfigScope scope,
+				  const char *id,
+				  enum config_open_type open_type);
+void obs_config_manager_release(ObsConfigManager *self, ObsConfigScope scope,
+				const char *id);
 
 G_END_DECLS
