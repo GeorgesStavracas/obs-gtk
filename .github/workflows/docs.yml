@@ -40,7 +40,7 @@ jobs:
         with:
           sphinx_src: 'docs/sphinx'
           build_only: True
-          target_branch: 'master'
+          target_branch: 'main'
           target_path: '../home/_build'
       - uses: actions/upload-artifact@v3
         with:

@@ -2,7 +2,7 @@ name: "Crowdin Sync: Upload English strings"
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - "**/en-US.ini"
 jobs:
