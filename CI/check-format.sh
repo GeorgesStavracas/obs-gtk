@@ -26,14 +26,14 @@ elif [[ ${OS} = "Darwin" ]] ; then
 fi
 
 # Discover clang-format
-if type clang-format-13 2> /dev/null ; then
-    CLANG_FORMAT=clang-format-13
+if type clang-format-14 2> /dev/null ; then
+    CLANG_FORMAT=clang-format-14
 elif type clang-format 2> /dev/null ; then
     # Clang format found, but need to check version
     CLANG_FORMAT=clang-format
     V=$(clang-format --version)
-    if [[ $V != *"version 13.0"* ]]; then
-        echo "clang-format is not 13.0 (returned ${V})"
+    if [[ $V != *"version 14.0"* ]]; then
+        echo "clang-format is not 14.0 (returned ${V})"
         exit 1
     fi
 else
@@ -47,6 +47,7 @@ find . -type d \( \
     -path ./plugins/decklink/\*/decklink-sdk -o \
     -path ./plugins/enc-amf -o \
     -path ./plugins/obs-outputs/ftl-sdk -o \
+    -path ./UI -o \
     -path ./plugins/obs-websocket/deps \
 \) -prune -false -type f -o \
     -name '*.h' -or \
