@@ -1,9 +1,8 @@
 # * Try to find Epoxy. Once done this will define
 #
-# EPOXY_FOUND - system has ADW
-# EPOXY_INCLUDE_DIRS - the ADW include directory
-# EPOXY_LIBRARIES - the libraries needed to use ADW
-# EPOXY_DEFINITIONS - Compiler switches required for using ADW
+# EPOXY_FOUND - system has ADW EPOXY_INCLUDE_DIRS - the ADW include directory
+# EPOXY_LIBRARIES - the libraries needed to use ADW EPOXY_DEFINITIONS - Compiler
+# switches required for using ADW
 
 # Use pkg-config to get the directories and then use these values in the
 # find_path() and find_library() calls
@@ -26,7 +25,8 @@ find_library(
   PATHS /usr/lib /usr/local/lib /opt/local/lib /sw/lib)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Epoxy REQUIRED_VARS EPOXY_LIB EPOXY_INCLUDE_DIR)
+find_package_handle_standard_args(Epoxy REQUIRED_VARS EPOXY_LIB
+                                                      EPOXY_INCLUDE_DIR)
 mark_as_advanced(EPOXY_INCLUDE_DIR EPOXY_LIB)
 
 if(EPOXY_FOUND)

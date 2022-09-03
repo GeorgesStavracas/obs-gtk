@@ -57,20 +57,12 @@ elseif(OS_POSIX)
     COMPONENTS EGL
     REQUIRED)
 
-  target_sources(libobs-opengl
-                 PRIVATE gl-drm.c
-                         gl-egl-common.c
-                         gl-nix.c
-                         gl-wayland-egl.c
-                         gl-x11-egl.c)
+  target_sources(libobs-opengl PRIVATE gl-drm.c gl-egl-common.c gl-nix.c
+                                       gl-wayland-egl.c gl-x11-egl.c)
 
-  target_link_libraries(libobs-opengl
-                        PRIVATE XCB::XCB
-                                X11::X11_xcb
-                                GBM::GBM
-                                Libdrm::Libdrm
-                                OpenGL::EGL
-                                Wayland::EGL)
+  target_link_libraries(
+    libobs-opengl PRIVATE XCB::XCB X11::X11_xcb GBM::GBM Libdrm::Libdrm
+                          OpenGL::EGL Wayland::EGL)
 
   set_target_properties(libobs-opengl PROPERTIES PREFIX "")
 endif()

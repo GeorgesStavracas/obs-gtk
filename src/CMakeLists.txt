@@ -24,11 +24,10 @@ set(OBS_RESOURCES_XML obs.gresources.xml)
 add_custom_command(
   OUTPUT ${OBS_RESOURCES_C}
   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-  COMMAND ${GLIB_COMPILE_RESOURCES}
-  ARGS
-      --target=${CMAKE_CURRENT_BINARY_DIR}/${OBS_RESOURCES_C}
-      --generate-source
-      ${OBS_RESOURCES_XML}
+  COMMAND
+    ${GLIB_COMPILE_RESOURCES} ARGS
+    --target=${CMAKE_CURRENT_BINARY_DIR}/${OBS_RESOURCES_C} --generate-source
+    ${OBS_RESOURCES_XML}
   VERBATIM
   MAIN_DEPENDENCY ${OBS_RESOURCES_XML}
   DEPENDS assets/projects.svg
@@ -66,17 +65,13 @@ add_custom_command(
           styles/default/style.css
           styles/default/style-dark.css
           styles/sakura/style.css
-          styles/sakura/style-dark.css
-)
-add_custom_target(
-  obs-resources
-  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${OBS_RESOURCES_C}
-)
+          styles/sakura/style-dark.css)
+add_custom_target(obs-resources
+                  DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/${OBS_RESOURCES_C})
 add_dependencies(obs-gtk4 obs-resources)
 
-target_include_directories(
-  obs-gtk4 PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
-                   ${CMAKE_CURRENT_SOURCE_DIR})
+target_include_directories(obs-gtk4 PRIVATE ${CMAKE_CURRENT_BINARY_DIR}
+                                            ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_sources(
   obs-gtk4
@@ -109,12 +104,8 @@ target_sources(
           scenes/obs-new-collection-dialog.c
           ${CMAKE_CURRENT_BINARY_DIR}/${OBS_RESOURCES_C})
 
-target_link_libraries(obs-gtk4
-  PRIVATE OBS::libobs
-          Epoxy::Epoxy
-          GTK4::GTK4
-          Libadwaita::Adwaita
-          Libpanel::Panel)
+target_link_libraries(obs-gtk4 PRIVATE OBS::libobs Epoxy::Epoxy GTK4::GTK4
+                                       Libadwaita::Adwaita Libpanel::Panel)
 
 define_graphic_modules(obs-gtk4)
 setup_binary_target(obs-gtk4)

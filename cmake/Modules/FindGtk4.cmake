@@ -1,9 +1,8 @@
 # * Try to find GTK4. Once done this will define
 #
-# GTK4_FOUND - system has GTK4
-# GTK4_INCLUDE_DIRS - the GTK4 include directory
-# GTK4_LIBRARIES - the libraries needed to use GTK4
-# GTK4_DEFINITIONS - Compiler switches required for using GTK4
+# GTK4_FOUND - system has GTK4 GTK4_INCLUDE_DIRS - the GTK4 include directory
+# GTK4_LIBRARIES - the libraries needed to use GTK4 GTK4_DEFINITIONS - Compiler
+# switches required for using GTK4
 
 # Use pkg-config to get the directories and then use these values in the
 # find_path() and find_library() calls

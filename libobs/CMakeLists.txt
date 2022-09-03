@@ -435,7 +435,8 @@ elseif(OS_POSIX)
       REQUIRED)
 
     target_sources(libobs PRIVATE obs-nix-wayland.c obs-nix-drm.c)
-    target_link_libraries(libobs PRIVATE XCB::XINPUT Wayland::Client Xkbcommon::Xkbcommon)
+    target_link_libraries(libobs PRIVATE XCB::XINPUT Wayland::Client
+                                         Xkbcommon::Xkbcommon)
     target_link_libraries(glad PRIVATE ${CMAKE_DL_LIBS})
   endif()
 

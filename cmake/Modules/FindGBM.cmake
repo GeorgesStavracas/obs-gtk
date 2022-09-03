@@ -1,9 +1,8 @@
 # * Try to find libgbm. Once done this will define
 #
-# GBM_FOUND - system has ADW
-# GBM_INCLUDE_DIRS - the ADW include directory
-# GBM_LIBRARIES - the libraries needed to use ADW
-# GBM_DEFINITIONS - Compiler switches required for using ADW
+# GBM_FOUND - system has ADW GBM_INCLUDE_DIRS - the ADW include directory
+# GBM_LIBRARIES - the libraries needed to use ADW GBM_DEFINITIONS - Compiler
+# switches required for using ADW
 
 # Use pkg-config to get the directories and then use these values in the
 # find_path() and find_library() calls
