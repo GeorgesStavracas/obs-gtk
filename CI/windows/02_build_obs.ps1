@@ -68,8 +68,6 @@ function Configure-OBS {
         "-DCMAKE_GENERATOR_PLATFORM=`"${GeneratorPlatform}`"",
         "-DCMAKE_SYSTEM_VERSION=`"${CmakeSystemVersion}`"",
         "-DCMAKE_PREFIX_PATH:PATH=`"${CmakePrefixPath}`"",
-        "-DCEF_ROOT_DIR:PATH=`"${CefDirectory}`"",
-        "-DENABLE_BROWSER=ON",
         "-DCMAKE_INSTALL_PREFIX=`"${BuildDirectoryActual}/install`"",
         "-DVIRTUALCAM_GUID=`"${Env:VIRTUALCAM-GUID}`"",
         "-DTWITCH_CLIENTID=`"${Env:TWITCH_CLIENTID}`"",
