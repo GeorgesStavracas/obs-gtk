@@ -1,8 +1,7 @@
 # * Try to find libadwaita. Once done this will define
 #
-# LIBADWAITA_FOUND - system has ADW
-# LIBADWAITA_INCLUDE_DIRS - the ADW include directory
-# LIBADWAITA_LIBRARIES - the libraries needed to use ADW
+# LIBADWAITA_FOUND - system has ADW LIBADWAITA_INCLUDE_DIRS - the ADW include
+# directory LIBADWAITA_LIBRARIES - the libraries needed to use ADW
 # LIBADWAITA_DEFINITIONS - Compiler switches required for using ADW
 
 # Use pkg-config to get the directories and then use these values in the
@@ -27,7 +26,8 @@ find_library(
   PATHS /usr/lib /usr/local/lib /opt/local/lib /sw/lib)
 
 include(FindPackageHandleStandardArgs)
-find_package_handle_standard_args(Libadwaita REQUIRED_VARS LIBADWAITA_LIB LIBADWAITA_INCLUDE_DIR)
+find_package_handle_standard_args(
+  Libadwaita REQUIRED_VARS LIBADWAITA_LIB LIBADWAITA_INCLUDE_DIR)
 mark_as_advanced(LIBADWAITA_INCLUDE_DIR LIBADWAITA_LIB)
 
 if(LIBADWAITA_FOUND)
@@ -37,18 +37,22 @@ if(LIBADWAITA_FOUND)
   if(NOT TARGET Libadwaita::Adwaita)
     if(IS_ABSOLUTE "${LIBADWAITA_LIBRARIES}")
       add_library(Libadwaita::Adwaita UNKNOWN IMPORTED)
-      set_target_properties(Libadwaita::Adwaita PROPERTIES IMPORTED_LOCATION
-                                                        "${LIBADWAITA_LIBRARIES}")
+      set_target_properties(
+        Libadwaita::Adwaita PROPERTIES IMPORTED_LOCATION
+                                       "${LIBADWAITA_LIBRARIES}")
     else()
       add_library(Libadwaita::Adwaita INTERFACE IMPORTED)
-      set_target_properties(Libadwaita::Adwaita PROPERTIES IMPORTED_LIBNAME
-                                                        "${LIBADWAITA_LIBRARIES}")
+      set_target_properties(
+        Libadwaita::Adwaita PROPERTIES IMPORTED_LIBNAME
+                                       "${LIBADWAITA_LIBRARIES}")
     endif()
 
     # Special case for libadwaita, as both the
-    set_target_properties(Libadwaita::Adwaita PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
-                                              "${_LIBADWAITA_INCLUDE_DIRS}")
-    target_link_libraries(Libadwaita::Adwaita INTERFACE ${_LIBADWAITA_LIBRARIES})
+    set_target_properties(
+      Libadwaita::Adwaita PROPERTIES INTERFACE_INCLUDE_DIRECTORIES
+                                     "${_LIBADWAITA_INCLUDE_DIRS}")
+    target_link_libraries(Libadwaita::Adwaita
+                          INTERFACE ${_LIBADWAITA_LIBRARIES})
     target_compile_options(Libadwaita::Adwaita INTERFACE ${_LIBADWAITA_CFLAGS})
   endif()
 endif()
