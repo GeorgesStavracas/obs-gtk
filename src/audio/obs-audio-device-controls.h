@@ -27,11 +27,13 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_AUDIO_DEVICE_CONTROLS (obs_audio_device_controls_get_type())
-G_DECLARE_FINAL_TYPE (ObsAudioDeviceControls, obs_audio_device_controls, OBS, AUDIO_DEVICE_CONTROLS, AdwBin)
+G_DECLARE_FINAL_TYPE(ObsAudioDeviceControls, obs_audio_device_controls, OBS,
+		     AUDIO_DEVICE_CONTROLS, AdwBin)
 
-GtkWidget      *obs_audio_device_controls_new              (ObsAudioDevice         *audio_device);
-ObsAudioDevice *obs_audio_device_controls_get_audio_device (ObsAudioDeviceControls *self);
-void            obs_audio_device_controls_set_audio_device (ObsAudioDeviceControls *self,
-                                                            ObsAudioDevice         *audio_device);
+GtkWidget *obs_audio_device_controls_new(ObsAudioDevice *audio_device);
+ObsAudioDevice *
+obs_audio_device_controls_get_audio_device(ObsAudioDeviceControls *self);
+void obs_audio_device_controls_set_audio_device(ObsAudioDeviceControls *self,
+						ObsAudioDevice *audio_device);
 
 G_END_DECLS

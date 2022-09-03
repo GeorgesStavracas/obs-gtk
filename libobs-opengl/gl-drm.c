@@ -264,11 +264,9 @@ static bool gl_drm_platform_init_swapchain(struct gs_swap_chain *swap)
 	struct gl_windowinfo *wi = swap->wi;
 	struct gl_platform *plat = swap->device->plat;
 
-	wi->gbm_surface = gbm_surface_create_with_modifiers2(plat->gbm,
-							     wi->width, wi->height,
-							     GBM_FORMAT_ARGB8888,
-							     NULL, 0,
-							     GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
+	wi->gbm_surface = gbm_surface_create_with_modifiers2(
+		plat->gbm, wi->width, wi->height, GBM_FORMAT_ARGB8888, NULL, 0,
+		GBM_BO_USE_RENDERING | GBM_BO_USE_LINEAR);
 	if (!wi->gbm_surface) {
 		blog(LOG_ERROR,
 		     "[drm] Failed to initialize swapchain: failed to create gbm_surface");
@@ -375,8 +373,9 @@ static void gl_drm_device_load_swapchain(gs_device_t *device,
 				 EGL_NO_CONTEXT);
 }
 
-static bool gl_drm_device_swapchain_acquire_texture(gs_swapchain_t *swap,
-						    struct gs_display_texture *texture)
+static bool
+gl_drm_device_swapchain_acquire_texture(gs_swapchain_t *swap,
+					struct gs_display_texture *texture)
 {
 	struct gl_platform *plat = swap->device->plat;
 	struct gl_windowinfo *wi = swap->wi;
@@ -405,17 +404,21 @@ static bool gl_drm_device_swapchain_acquire_texture(gs_swapchain_t *swap,
 	texture->dmabuf.modifiers = bzalloc(sizeof(uint64_t) * n_planes);
 
 	for (int i = 0; i < n_planes; i++) {
-		texture->dmabuf.fds[i] = gbm_bo_get_fd_for_plane(wi->front_bo, i);
+		texture->dmabuf.fds[i] =
+			gbm_bo_get_fd_for_plane(wi->front_bo, i);
 		texture->dmabuf.offsets[i] = gbm_bo_get_offset(wi->front_bo, i);
-		texture->dmabuf.strides[i] = gbm_bo_get_stride_for_plane(wi->front_bo, i);
-		texture->dmabuf.modifiers[i] = gbm_bo_get_modifier(wi->front_bo);
+		texture->dmabuf.strides[i] =
+			gbm_bo_get_stride_for_plane(wi->front_bo, i);
+		texture->dmabuf.modifiers[i] =
+			gbm_bo_get_modifier(wi->front_bo);
 	}
 
 	return true;
 }
 
-static void gl_drm_device_swapchain_release_texture(gs_swapchain_t *swap,
-						    struct gs_display_texture *texture)
+static void
+gl_drm_device_swapchain_release_texture(gs_swapchain_t *swap,
+					struct gs_display_texture *texture)
 {
 	struct gl_platform *plat = swap->device->plat;
 	struct gl_windowinfo *wi = swap->wi;
@@ -441,7 +444,8 @@ static void gl_drm_device_present(gs_device_t *device)
 	struct gl_windowinfo *wi = device->cur_swap->wi;
 
 	if (eglSwapBuffers(plat->egl_display, wi->egl_surface) == EGL_FALSE)
-		blog(LOG_ERROR, "[drm] eglSwapBuffers failed: %s", gl_egl_error_to_string(eglGetError()));
+		blog(LOG_ERROR, "[drm] eglSwapBuffers failed: %s",
+		     gl_egl_error_to_string(eglGetError()));
 }
 
 static struct gs_texture *gl_drm_device_texture_create_from_dmabuf(

@@ -26,8 +26,7 @@
 
 #include <adwaita.h>
 
-struct _ObsStyleManager
-{
+struct _ObsStyleManager {
 	GObject parent_instance;
 
 	GtkStyleProvider *base_style_provider;
@@ -40,30 +39,27 @@ struct _ObsStyleManager
 	char *uri;
 };
 
-G_DEFINE_FINAL_TYPE (ObsStyleManager, obs_style_manager, G_TYPE_OBJECT)
+G_DEFINE_FINAL_TYPE(ObsStyleManager, obs_style_manager, G_TYPE_OBJECT)
 
 static ObsStyleManager *default_instance = NULL;
 
-static inline void
-widget_style_provider_set_enabled (GtkWidget        *widget,
-                                   GtkStyleProvider *provider,
-                                   gboolean          enabled)
+static inline void widget_style_provider_set_enabled(GtkWidget *widget,
+						     GtkStyleProvider *provider,
+						     gboolean enabled)
 {
 	GtkStyleContext *style_context = gtk_widget_get_style_context(widget);
 
 	if (enabled) {
-		gtk_style_context_add_provider(style_context, provider,
-					       GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+		gtk_style_context_add_provider(
+			style_context, provider,
+			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 
 	} else {
 		gtk_style_context_remove_provider(style_context, provider);
 	}
 }
 
-
-static void
-update_widget_stylesheet(ObsStyleManager *self,
-                         GtkWidget       *widget)
+static void update_widget_stylesheet(ObsStyleManager *self, GtkWidget *widget)
 
 {
 	GtkStyleProvider *base_style_provider;
@@ -82,19 +78,21 @@ update_widget_stylesheet(ObsStyleManager *self,
 
 	dark_style_provider = g_object_get_data(G_OBJECT(widget), "base-dark");
 	if (dark_style_provider)
-		widget_style_provider_set_enabled(widget, dark_style_provider, is_dark);
+		widget_style_provider_set_enabled(widget, dark_style_provider,
+						  is_dark);
 
 	hc_style_provider = g_object_get_data(G_OBJECT(widget), "hc");
 	if (hc_style_provider)
-		widget_style_provider_set_enabled(widget, hc_style_provider, is_hc);
+		widget_style_provider_set_enabled(widget, hc_style_provider,
+						  is_hc);
 
 	hc_dark_style_provider = g_object_get_data(G_OBJECT(widget), "hc-dark");
 	if (hc_dark_style_provider)
-		widget_style_provider_set_enabled(widget, hc_dark_style_provider, is_hc && is_dark);
+		widget_style_provider_set_enabled(
+			widget, hc_dark_style_provider, is_hc && is_dark);
 }
 
-static void
-update_widgets_stylesheets(ObsStyleManager *self)
+static void update_widgets_stylesheets(ObsStyleManager *self)
 {
 	AdwStyleManager *manager = adw_style_manager_get_default();
 	gboolean is_dark, is_hc;
@@ -103,26 +101,27 @@ update_widgets_stylesheets(ObsStyleManager *self)
 	is_hc = adw_style_manager_get_high_contrast(manager);
 
 	for (unsigned int i = 0; i < self->styled_widgets->len; i++)
-		update_widget_stylesheet(self, g_ptr_array_index(self->styled_widgets, i));
+		update_widget_stylesheet(
+			self, g_ptr_array_index(self->styled_widgets, i));
 }
 
-static inline void
-style_provider_set_enabled (GtkStyleProvider *provider,
-                            gboolean          enabled)
+static inline void style_provider_set_enabled(GtkStyleProvider *provider,
+					      gboolean enabled)
 {
 	GdkDisplay *display = gdk_display_get_default();
 
 	if (enabled) {
-		gtk_style_context_add_provider_for_display(display, provider,
-							    GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+		gtk_style_context_add_provider_for_display(
+			display, provider,
+			GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 
 	} else {
-		gtk_style_context_remove_provider_for_display(display, provider);
+		gtk_style_context_remove_provider_for_display(display,
+							      provider);
 	}
 }
 
-static void
-update_global_stylesheet(ObsStyleManager *self)
+static void update_global_stylesheet(ObsStyleManager *self)
 {
 	ObsConfigManager *config_manager;
 	AdwStyleManager *adw_style_manager;
@@ -146,56 +145,51 @@ update_global_stylesheet(ObsStyleManager *self)
 		style_provider_set_enabled(self->hc_style_provider, is_hc);
 
 	if (self->hc_dark_style_provider)
-		style_provider_set_enabled(self->hc_dark_style_provider, is_hc && is_dark);
+		style_provider_set_enabled(self->hc_dark_style_provider,
+					   is_hc && is_dark);
 
 	/* Save theme and color scheme */
 	application = g_application_get_default();
-	config_manager = obs_application_get_config_manager(OBS_APPLICATION(application));
+	config_manager = obs_application_get_config_manager(
+		OBS_APPLICATION(application));
 
 	global_config = obs_config_manager_open(config_manager,
 						OBS_CONFIG_SCOPE_GLOBAL,
-						"global",
-						CONFIG_OPEN_ALWAYS);
-	config_set_string(global_config, "General", "ColorScheme", obs_color_scheme_to_string(color_scheme));
+						"global", CONFIG_OPEN_ALWAYS);
+	config_set_string(global_config, "General", "ColorScheme",
+			  obs_color_scheme_to_string(color_scheme));
 	config_set_string(global_config, "General", "Theme", self->uri);
 	config_save_safe(global_config, "tmp", NULL);
 }
 
-static void
-init_provider_from_file(GtkStyleProvider **provider,
-                        GFile             *file)
+static void init_provider_from_file(GtkStyleProvider **provider, GFile *file)
 {
 	if (!g_file_query_exists(file, NULL)) {
-		g_clear_object (&file);
+		g_clear_object(&file);
 		return;
 	}
 
 	g_clear_object(provider);
-	*provider = GTK_STYLE_PROVIDER(gtk_css_provider_new ());
-	gtk_css_provider_load_from_file(GTK_CSS_PROVIDER (*provider), file);
+	*provider = GTK_STYLE_PROVIDER(gtk_css_provider_new());
+	gtk_css_provider_load_from_file(GTK_CSS_PROVIDER(*provider), file);
 
-	g_clear_object (&file);
+	g_clear_object(&file);
 }
 
-static void
-on_style_changed_cb(AdwStyleManager *style_manager,
-                    GParamSpec      *pspec,
-                    ObsStyleManager *self)
+static void on_style_changed_cb(AdwStyleManager *style_manager,
+				GParamSpec *pspec, ObsStyleManager *self)
 {
 	update_global_stylesheet(self);
 	update_widgets_stylesheets(self);
 }
 
-static void
-widget_destroyed_cb(gpointer  data,
-                    GObject  *where_the_object_was)
+static void widget_destroyed_cb(gpointer data, GObject *where_the_object_was)
 {
 	ObsStyleManager *self = OBS_STYLE_MANAGER(data);
 	g_ptr_array_remove(self->styled_widgets, where_the_object_was);
 }
 
-static void
-obs_style_manager_dispose (GObject *object)
+static void obs_style_manager_dispose(GObject *object)
 {
 	ObsStyleManager *self = (ObsStyleManager *)object;
 
@@ -207,40 +201,33 @@ obs_style_manager_dispose (GObject *object)
 	g_clear_pointer(&self->styled_widgets, g_ptr_array_unref);
 	g_clear_pointer(&self->uri, g_free);
 
-	G_OBJECT_CLASS (obs_style_manager_parent_class)->dispose(object);
+	G_OBJECT_CLASS(obs_style_manager_parent_class)->dispose(object);
 }
 
-static void
-obs_style_manager_class_init (ObsStyleManagerClass *klass)
+static void obs_style_manager_class_init(ObsStyleManagerClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
 	object_class->dispose = obs_style_manager_dispose;
 }
 
-static void
-obs_style_manager_init (ObsStyleManager *self)
+static void obs_style_manager_init(ObsStyleManager *self)
 {
 	self->styled_widgets = g_ptr_array_new();
 
-	g_signal_connect_object (adw_style_manager_get_default(),
-				 "notify",
-				 G_CALLBACK(on_style_changed_cb),
-				 self, 0);
+	g_signal_connect_object(adw_style_manager_get_default(), "notify",
+				G_CALLBACK(on_style_changed_cb), self, 0);
 }
 
-ObsStyleManager *
-obs_style_manager_get_default(void)
+ObsStyleManager *obs_style_manager_get_default(void)
 {
 	if (!default_instance)
-		default_instance = g_object_new (OBS_TYPE_STYLE_MANAGER, NULL);
+		default_instance = g_object_new(OBS_TYPE_STYLE_MANAGER, NULL);
 
 	return default_instance;
 }
 
-void
-obs_style_manager_load_style(ObsStyleManager  *self,
-                             const char       *uri)
+void obs_style_manager_load_style(ObsStyleManager *self, const char *uri)
 {
 	GFile *base_file;
 
@@ -271,25 +258,23 @@ obs_style_manager_load_style(ObsStyleManager  *self,
 	init_provider_from_file(&self->hc_style_provider,
 				g_file_get_child(base_file, "style-hc.css"));
 	init_provider_from_file(&self->hc_dark_style_provider,
-				g_file_get_child(base_file, "style-hc-dark.css"));
+				g_file_get_child(base_file,
+						 "style-hc-dark.css"));
 
 	update_global_stylesheet(self);
 
 	g_object_unref(base_file);
 }
 
-const char *
-obs_style_manager_get_style (ObsStyleManager *self)
+const char *obs_style_manager_get_style(ObsStyleManager *self)
 {
 	g_return_val_if_fail(OBS_IS_STYLE_MANAGER(self), NULL);
 
 	return self->uri;
 }
 
-void
-obs_style_manager_load_style_to_widget(ObsStyleManager *self,
-                                       GtkWidget       *widget,
-                                       const char      *uri)
+void obs_style_manager_load_style_to_widget(ObsStyleManager *self,
+					    GtkWidget *widget, const char *uri)
 {
 	GtkStyleProvider *base_style_provider = NULL;
 	GtkStyleProvider *dark_style_provider = NULL;
@@ -309,12 +294,17 @@ obs_style_manager_load_style_to_widget(ObsStyleManager *self,
 	init_provider_from_file(&hc_style_provider,
 				g_file_get_child(base_file, "style-hc.css"));
 	init_provider_from_file(&hc_dark_style_provider,
-				g_file_get_child(base_file, "style-hc-dark.css"));
+				g_file_get_child(base_file,
+						 "style-hc-dark.css"));
 
-	g_object_set_data_full(G_OBJECT(widget), "base", base_style_provider, g_object_unref);
-	g_object_set_data_full(G_OBJECT(widget), "base-dark", dark_style_provider, g_object_unref);
-	g_object_set_data_full(G_OBJECT(widget), "hc", hc_style_provider, g_object_unref);
-	g_object_set_data_full(G_OBJECT(widget), "hc-dark", hc_dark_style_provider, g_object_unref);
+	g_object_set_data_full(G_OBJECT(widget), "base", base_style_provider,
+			       g_object_unref);
+	g_object_set_data_full(G_OBJECT(widget), "base-dark",
+			       dark_style_provider, g_object_unref);
+	g_object_set_data_full(G_OBJECT(widget), "hc", hc_style_provider,
+			       g_object_unref);
+	g_object_set_data_full(G_OBJECT(widget), "hc-dark",
+			       hc_dark_style_provider, g_object_unref);
 
 	g_ptr_array_add(self->styled_widgets, widget);
 

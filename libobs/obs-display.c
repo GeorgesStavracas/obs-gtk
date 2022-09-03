@@ -312,7 +312,8 @@ void obs_display_size(obs_display_t *display, uint32_t *width, uint32_t *height)
 	}
 }
 
-bool obs_display_acquire_texture(obs_display_t *display, struct gs_display_texture *texture)
+bool obs_display_acquire_texture(obs_display_t *display,
+				 struct gs_display_texture *texture)
 {
 	bool result;
 

@@ -23,21 +23,17 @@
 #define IS_NAN(x) (isnan(x) != 0)
 #define IS_INFINITE(x) (isfinite(x) == 0)
 
-static inline double
-us_to_s(int64_t ns)
+static inline double us_to_s(int64_t ns)
 {
 	return ns / 1000000.0;
 }
 
-static inline int64_t
-ms_to_us(int64_t ms)
+static inline int64_t ms_to_us(int64_t ms)
 {
 	return ms * 1000;
 }
 
-
-static void
-reset_peak_tracker_unlocked(ObsAudioPeakTracker *self)
+static void reset_peak_tracker_unlocked(ObsAudioPeakTracker *self)
 {
 	self->last_update_time_us = 0;
 
@@ -56,25 +52,21 @@ reset_peak_tracker_unlocked(ObsAudioPeakTracker *self)
 	}
 }
 
-void
-obs_audio_peak_tracker_init(ObsAudioPeakTracker *self)
+void obs_audio_peak_tracker_init(ObsAudioPeakTracker *self)
 {
 	g_mutex_init(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_clear(ObsAudioPeakTracker *self)
+void obs_audio_peak_tracker_clear(ObsAudioPeakTracker *self)
 {
 	g_mutex_clear(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_start (ObsAudioPeakTracker *self,
-                              double               decay_rate,
-                              double               minimum_level_db,
-                              double               magnitude_integration_time,
-                              int64_t              peak_hold_duration_ms,
-                              int64_t              input_peak_hold_duration_ms)
+void obs_audio_peak_tracker_start(ObsAudioPeakTracker *self, double decay_rate,
+				  double minimum_level_db,
+				  double magnitude_integration_time,
+				  int64_t peak_hold_duration_ms,
+				  int64_t input_peak_hold_duration_ms)
 {
 	g_mutex_lock(&self->mutex);
 
@@ -89,17 +81,16 @@ obs_audio_peak_tracker_start (ObsAudioPeakTracker *self,
 	g_mutex_unlock(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_tick (ObsAudioPeakTracker *self,
-                             int64_t              now_us,
-                             int64_t              ellapsed_time_us)
+void obs_audio_peak_tracker_tick(ObsAudioPeakTracker *self, int64_t now_us,
+				 int64_t ellapsed_time_us)
 {
 	double ellapsed_time_s = us_to_s(ellapsed_time_us);
 
 	g_mutex_lock(&self->mutex);
 
 	for (int i = 0; i < MAX_AUDIO_CHANNELS; i++) {
-		if (IS_NAN(self->display.peaks[i]) || self->peaks[i] >= self->display.peaks[i]) {
+		if (IS_NAN(self->display.peaks[i]) ||
+		    self->peaks[i] >= self->display.peaks[i]) {
 			// Attack of peak is immediate.
 			self->display.peaks[i] = self->peaks[i];
 		} else {
@@ -107,16 +98,23 @@ obs_audio_peak_tracker_tick (ObsAudioPeakTracker *self,
 			// 20 dB / 1.7 seconds for Medium Profile (Type I PPM)
 			// 24 dB / 2.8 seconds for Slow Profile (Type II PPM)
 			double decay = self->decay_rate * ellapsed_time_s;
-			self->display.peaks[i] = CLAMP(self->display.peaks[i] - decay, self->peaks[i], 0.0);
+			self->display.peaks[i] =
+				CLAMP(self->display.peaks[i] - decay,
+				      self->peaks[i], 0.0);
 		}
 
-		if (IS_INFINITE(self->display.peak_holds[i]) || self->peaks[i] >= self->display.peak_holds[i]) {
+		if (IS_INFINITE(self->display.peak_holds[i]) ||
+		    self->peaks[i] >= self->display.peak_holds[i]) {
 			// The peak and hold falls back to peak after 20 seconds.
-			int64_t ellapsed_peak_time_us = now_us - self->display.peak_hold_update_times_us[i];
+			int64_t ellapsed_peak_time_us =
+				now_us -
+				self->display.peak_hold_update_times_us[i];
 
-			if (ellapsed_peak_time_us > ms_to_us(self->peak_hold_duration_ms)) {
+			if (ellapsed_peak_time_us >
+			    ms_to_us(self->peak_hold_duration_ms)) {
 				self->display.peak_holds[i] = self->peaks[i];
-				self->display.peak_hold_update_times_us[i] = now_us;
+				self->display.peak_hold_update_times_us[i] =
+					now_us;
 			}
 		} else {
 			// Attack of peak-hold is immediate, but keep track when it was last updated
@@ -124,17 +122,25 @@ obs_audio_peak_tracker_tick (ObsAudioPeakTracker *self,
 			self->display.peak_hold_update_times_us[i] = now_us;
 		}
 
-		if (IS_INFINITE(self->display.input_peaks[i]) || self->input_peaks[i] >= self->display.input_peaks[i]) {
+		if (IS_INFINITE(self->display.input_peaks[i]) ||
+		    self->input_peaks[i] >= self->display.input_peaks[i]) {
 			// Attack of peak-hold is immediate, but keep track when it was last updated
 			self->display.input_peaks[i] = self->input_peaks[i];
-			self->display.input_peak_hold_update_times_us[i] = now_us;
+			self->display.input_peak_hold_update_times_us[i] =
+				now_us;
 		} else {
 			// The peak and hold falls back to peak after 1 second.
-			int64_t ellapsed_input_peak_time_us = now_us - self->display.input_peak_hold_update_times_us[i];
+			int64_t ellapsed_input_peak_time_us =
+				now_us -
+				self->display.input_peak_hold_update_times_us[i];
 
-			if (ellapsed_input_peak_time_us > ms_to_us(self->input_peak_hold_duration_ms)) {
-				self->display.input_peaks[i] = self->input_peaks[i];
-				self->display.input_peak_hold_update_times_us[i] = now_us;
+			if (ellapsed_input_peak_time_us >
+			    ms_to_us(self->input_peak_hold_duration_ms)) {
+				self->display.input_peaks[i] =
+					self->input_peaks[i];
+				self->display
+					.input_peak_hold_update_times_us[i] =
+					now_us;
 			}
 		}
 
@@ -144,33 +150,33 @@ obs_audio_peak_tracker_tick (ObsAudioPeakTracker *self,
 			// A VU meter will integrate to the new value to 99% in 300 ms.
 			// The calculation here is very simplified and is more accurate
 			// with higher frame-rate.
-			float attack = (self->magnitudes[i] - self->display.magnitudes[i]) *
-			               (ellapsed_time_s / self->magnitude_integration_time) *
-			               0.99;
+			float attack = (self->magnitudes[i] -
+					self->display.magnitudes[i]) *
+				       (ellapsed_time_s /
+					self->magnitude_integration_time) *
+				       0.99;
 
-			self->display.magnitudes[i] = CLAMP(self->display.magnitudes[i] + attack,
-							    (float)self->minimum_level_db,
-							    0);
+			self->display.magnitudes[i] =
+				CLAMP(self->display.magnitudes[i] + attack,
+				      (float)self->minimum_level_db, 0);
 		}
 	}
 	g_mutex_unlock(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_reset (ObsAudioPeakTracker *self)
+void obs_audio_peak_tracker_reset(ObsAudioPeakTracker *self)
 {
 	g_mutex_lock(&self->mutex);
 	reset_peak_tracker_unlocked(self);
 	g_mutex_unlock(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_set_levels (ObsAudioPeakTracker *self,
-                                   int64_t              update_time_us,
-                                   const float         *magnitudes,
-                                   const float         *peaks,
-                                   const float         *input_peaks,
-                                   size_t               n_channels)
+void obs_audio_peak_tracker_set_levels(ObsAudioPeakTracker *self,
+				       int64_t update_time_us,
+				       const float *magnitudes,
+				       const float *peaks,
+				       const float *input_peaks,
+				       size_t n_channels)
 {
 	g_mutex_lock(&self->mutex);
 
@@ -183,12 +189,9 @@ obs_audio_peak_tracker_set_levels (ObsAudioPeakTracker *self,
 	g_mutex_unlock(&self->mutex);
 }
 
-void
-obs_audio_peak_tracker_get_levels (ObsAudioPeakTracker *self,
-                                   uint32_t             channel,
-                                   float               *out_magnitude,
-                                   float               *out_peak,
-                                   float               *out_input_peak)
+void obs_audio_peak_tracker_get_levels(ObsAudioPeakTracker *self,
+				       uint32_t channel, float *out_magnitude,
+				       float *out_peak, float *out_input_peak)
 {
 	if (channel > MAX_AUDIO_CHANNELS)
 		return;
@@ -215,9 +218,8 @@ obs_audio_peak_tracker_get_levels (ObsAudioPeakTracker *self,
 	}
 }
 
-gboolean
-obs_audio_peak_tracker_is_idle (ObsAudioPeakTracker *self,
-                                int64_t              now_us)
+gboolean obs_audio_peak_tracker_is_idle(ObsAudioPeakTracker *self,
+					int64_t now_us)
 {
 	return now_us - self->last_update_time_us > ms_to_us(500);
 }

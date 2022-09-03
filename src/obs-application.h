@@ -27,12 +27,14 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_APPLICATION (obs_application_get_type())
-G_DECLARE_FINAL_TYPE (ObsApplication, obs_application, OBS, APPLICATION, AdwApplication)
+G_DECLARE_FINAL_TYPE(ObsApplication, obs_application, OBS, APPLICATION,
+		     AdwApplication)
 
-GApplication * obs_application_new (void);
+GApplication *obs_application_new(void);
 
-ObsConfigManager * obs_application_get_config_manager (ObsApplication *self);
-ObsAudioController * obs_application_get_audio_controller (ObsApplication *self);
-ObsTemplatesManager * obs_application_get_templates_manager (ObsApplication *self);
+ObsConfigManager *obs_application_get_config_manager(ObsApplication *self);
+ObsAudioController *obs_application_get_audio_controller(ObsApplication *self);
+ObsTemplatesManager *
+obs_application_get_templates_manager(ObsApplication *self);
 
 G_END_DECLS

@@ -24,8 +24,7 @@
 
 #include <glib/gi18n.h>
 
-struct _ObsTemplatesManager
-{
+struct _ObsTemplatesManager {
 	GObject parent_instance;
 
 	GListStore *collection_templates;
@@ -33,26 +32,27 @@ struct _ObsTemplatesManager
 	gboolean loaded;
 };
 
-G_DEFINE_FINAL_TYPE (ObsTemplatesManager, obs_templates_manager, G_TYPE_OBJECT)
-
+G_DEFINE_FINAL_TYPE(ObsTemplatesManager, obs_templates_manager, G_TYPE_OBJECT)
 
 static const struct {
 	const char *id;
 	const char *name;
 } collection_templates[] = {
-	{ "empty", N_("Empty"), },
+	{
+		"empty",
+		N_("Empty"),
+	},
 };
 
-static void
-load_collection_templates(ObsTemplatesManager *self)
+static void load_collection_templates(ObsTemplatesManager *self)
 {
 	for (size_t i = 0; i < G_N_ELEMENTS(collection_templates); i++) {
 		ObsCollectionTemplate *collection_template;
 		GError *error = NULL;
 
-		collection_template = obs_collection_template_new(collection_templates[i].id,
-								  collection_templates[i].name,
-								  &error);
+		collection_template = obs_collection_template_new(
+			collection_templates[i].id,
+			collection_templates[i].name, &error);
 		if (error) {
 			g_warning("Failed to load template '%s': %s",
 				  collection_templates[i].id, error->message);
@@ -60,44 +60,40 @@ load_collection_templates(ObsTemplatesManager *self)
 			continue;
 		}
 
-		g_list_store_append(self->collection_templates, collection_template);
+		g_list_store_append(self->collection_templates,
+				    collection_template);
 		g_object_unref(collection_template);
 	}
 }
 
-static void
-obs_templates_manager_finalize (GObject *object)
+static void obs_templates_manager_finalize(GObject *object)
 {
 	ObsTemplatesManager *self = (ObsTemplatesManager *)object;
 
 	g_clear_object(&self->collection_templates);
 
-	G_OBJECT_CLASS (obs_templates_manager_parent_class)->finalize (object);
+	G_OBJECT_CLASS(obs_templates_manager_parent_class)->finalize(object);
 }
 
-static void
-obs_templates_manager_class_init (ObsTemplatesManagerClass *klass)
+static void obs_templates_manager_class_init(ObsTemplatesManagerClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
 	object_class->finalize = obs_templates_manager_finalize;
 }
 
-static void
-obs_templates_manager_init (ObsTemplatesManager *self)
+static void obs_templates_manager_init(ObsTemplatesManager *self)
 {
-	self->collection_templates = g_list_store_new(OBS_TYPE_COLLECTION_TEMPLATE);
-
+	self->collection_templates =
+		g_list_store_new(OBS_TYPE_COLLECTION_TEMPLATE);
 }
 
-ObsTemplatesManager *
-obs_templates_manager_new (void)
+ObsTemplatesManager *obs_templates_manager_new(void)
 {
-	return g_object_new (OBS_TYPE_TEMPLATES_MANAGER, NULL);
+	return g_object_new(OBS_TYPE_TEMPLATES_MANAGER, NULL);
 }
 
-void
-obs_templates_manager_load_templates (ObsTemplatesManager *self)
+void obs_templates_manager_load_templates(ObsTemplatesManager *self)
 {
 	g_return_if_fail(OBS_IS_TEMPLATES_MANAGER(self));
 	g_return_if_fail(!self->loaded);
@@ -108,7 +104,7 @@ obs_templates_manager_load_templates (ObsTemplatesManager *self)
 }
 
 GListModel *
-obs_templates_manager_get_collection_templates (ObsTemplatesManager *self)
+obs_templates_manager_get_collection_templates(ObsTemplatesManager *self)
 {
 	g_return_val_if_fail(OBS_IS_TEMPLATES_MANAGER(self), NULL);
 	g_return_val_if_fail(self->loaded, NULL);

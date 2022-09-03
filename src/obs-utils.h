@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-AdwColorScheme  obs_color_scheme_from_string (const char     *string);
-const char     *obs_color_scheme_to_string   (AdwColorScheme  color_scheme);
+AdwColorScheme obs_color_scheme_from_string(const char *string);
+const char *obs_color_scheme_to_string(AdwColorScheme color_scheme);
 
 G_END_DECLS

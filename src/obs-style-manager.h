@@ -25,15 +25,14 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_STYLE_MANAGER (obs_style_manager_get_type())
-G_DECLARE_FINAL_TYPE (ObsStyleManager, obs_style_manager, OBS, STYLE_MANAGER, GObject)
+G_DECLARE_FINAL_TYPE(ObsStyleManager, obs_style_manager, OBS, STYLE_MANAGER,
+		     GObject)
 
-ObsStyleManager *obs_style_manager_get_default          (void);
-void             obs_style_manager_load_style           (ObsStyleManager *self,
-                                                         const char      *uri);
-const char      *obs_style_manager_get_style            (ObsStyleManager *self);
+ObsStyleManager *obs_style_manager_get_default(void);
+void obs_style_manager_load_style(ObsStyleManager *self, const char *uri);
+const char *obs_style_manager_get_style(ObsStyleManager *self);
 
-void             obs_style_manager_load_style_to_widget (ObsStyleManager *self,
-                                                         GtkWidget       *widget,
-                                                         const char      *uri);
+void obs_style_manager_load_style_to_widget(ObsStyleManager *self,
+					    GtkWidget *widget, const char *uri);
 
 G_END_DECLS

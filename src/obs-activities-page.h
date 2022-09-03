@@ -25,6 +25,7 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_ACTIVITIES_PAGE (obs_activities_page_get_type())
-G_DECLARE_FINAL_TYPE (ObsActivitiesPage, obs_activities_page, OBS, ACTIVITIES_PAGE, AdwBin)
+G_DECLARE_FINAL_TYPE(ObsActivitiesPage, obs_activities_page, OBS,
+		     ACTIVITIES_PAGE, AdwBin)
 
 G_END_DECLS

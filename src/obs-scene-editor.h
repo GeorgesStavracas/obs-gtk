@@ -25,6 +25,7 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_SCENE_EDITOR (obs_scene_editor_get_type())
-G_DECLARE_FINAL_TYPE (ObsSceneEditor, obs_scene_editor, OBS, SCENE_EDITOR, GtkWidget)
+G_DECLARE_FINAL_TYPE(ObsSceneEditor, obs_scene_editor, OBS, SCENE_EDITOR,
+		     GtkWidget)
 
 G_END_DECLS

@@ -40,8 +40,7 @@ typedef struct {
 	gpointer data;
 } DrawCallbackData;
 
-struct _ObsDisplayRenderer
-{
+struct _ObsDisplayRenderer {
 	GtkMediaStream parent_instance;
 
 	GdkGLContext *gl_context;
@@ -56,23 +55,19 @@ struct _ObsDisplayRenderer
 	} shared;
 };
 
-static void obs_display_renderer_paintable_init (GdkPaintableInterface *iface);
+static void obs_display_renderer_paintable_init(GdkPaintableInterface *iface);
 
-G_DEFINE_FINAL_TYPE_WITH_CODE (ObsDisplayRenderer, obs_display_renderer, GTK_TYPE_MEDIA_STREAM,
-			       G_IMPLEMENT_INTERFACE (GDK_TYPE_PAINTABLE,
-						      obs_display_renderer_paintable_init))
+G_DEFINE_FINAL_TYPE_WITH_CODE(
+	ObsDisplayRenderer, obs_display_renderer, GTK_TYPE_MEDIA_STREAM,
+	G_IMPLEMENT_INTERFACE(GDK_TYPE_PAINTABLE,
+			      obs_display_renderer_paintable_init))
 
-
-static GdkPaintable *
-import_dmabuf_egl (GdkGLContext   *context,
-                   uint32_t        format,
-                   unsigned int    width,
-                   unsigned int    height,
-                   uint32_t        n_planes,
-                   const int      *fds,
-                   const uint32_t *strides,
-                   const uint32_t *offsets,
-                   const uint64_t *modifiers)
+static GdkPaintable *import_dmabuf_egl(GdkGLContext *context, uint32_t format,
+				       unsigned int width, unsigned int height,
+				       uint32_t n_planes, const int *fds,
+				       const uint32_t *strides,
+				       const uint32_t *offsets,
+				       const uint64_t *modifiers)
 {
 	GdkDisplay *display;
 	EGLDisplay egl_display;
@@ -89,12 +84,12 @@ import_dmabuf_egl (GdkGLContext   *context,
 		egl_display = gdk_wayland_display_get_egl_display(display);
 #endif
 #ifdef GDK_WINDOWING_X11
-	if (GDK_IS_X11_DISPLAY (display))
+	if (GDK_IS_X11_DISPLAY(display))
 		egl_display = gdk_x11_display_get_egl_display(display);
 #endif
 
 	if (!egl_display) {
-		g_warning ("Can't import DMA-BUF when not using EGL");
+		g_warning("Can't import DMA-BUF when not using EGL");
 		return NULL;
 	}
 
@@ -113,14 +108,13 @@ import_dmabuf_egl (GdkGLContext   *context,
 		attribs[i++] = offsets[0];
 		attribs[i++] = EGL_DMA_BUF_PLANE0_PITCH_EXT;
 		attribs[i++] = strides[0];
-      if (modifiers)
-        {
+		if (modifiers) {
 			attribs[i++] = EGL_DMA_BUF_PLANE0_MODIFIER_LO_EXT;
 			attribs[i++] = modifiers[0] & 0xFFFFFFFF;
 			attribs[i++] = EGL_DMA_BUF_PLANE0_MODIFIER_HI_EXT;
 			attribs[i++] = modifiers[0] >> 32;
-        }
-    }
+		}
+	}
 
 	if (n_planes > 1) {
 		attribs[i++] = EGL_DMA_BUF_PLANE1_FD_EXT;
@@ -171,13 +165,11 @@ import_dmabuf_egl (GdkGLContext   *context,
 
 	gdk_gl_context_make_current(context);
 
-	image = eglCreateImageKHR(egl_display,
-				  EGL_NO_CONTEXT,
-				  EGL_LINUX_DMA_BUF_EXT,
-				  (EGLClientBuffer)NULL,
+	image = eglCreateImageKHR(egl_display, EGL_NO_CONTEXT,
+				  EGL_LINUX_DMA_BUF_EXT, (EGLClientBuffer)NULL,
 				  attribs);
 	if (image == EGL_NO_IMAGE) {
-		g_warning ("Failed to create EGL image: %d\n", eglGetError ());
+		g_warning("Failed to create EGL image: %d\n", eglGetError());
 		return 0;
 	}
 
@@ -189,40 +181,36 @@ import_dmabuf_egl (GdkGLContext   *context,
 
 	eglDestroyImageKHR(egl_display, image);
 
-	return GDK_PAINTABLE(gdk_gl_texture_new(context, texture_id,
-						width, height,
-						NULL, NULL));
+	return GDK_PAINTABLE(gdk_gl_texture_new(context, texture_id, width,
+						height, NULL, NULL));
 }
 
 /*
  * Callbacks
  */
 
-static gboolean
-queue_redraw_cb (gpointer data)
+static gboolean queue_redraw_cb(gpointer data)
 {
 	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(data);
 	struct gs_display_texture texture;
 
-	if (self->obs_display && obs_display_acquire_texture(self->obs_display, &texture)) {
+	if (self->obs_display &&
+	    obs_display_acquire_texture(self->obs_display, &texture)) {
 		gdk_gl_context_clear_current();
 
-		g_clear_object (&self->paintable);
-		self->paintable = import_dmabuf_egl(self->gl_context,
-						    texture.dmabuf.drm_format,
-						    texture.dmabuf.width,
-						    texture.dmabuf.height,
-						    texture.dmabuf.n_planes,
-						    texture.dmabuf.fds,
-						    texture.dmabuf.strides,
-						    texture.dmabuf.offsets,
-						    texture.dmabuf.modifiers);
+		g_clear_object(&self->paintable);
+		self->paintable = import_dmabuf_egl(
+			self->gl_context, texture.dmabuf.drm_format,
+			texture.dmabuf.width, texture.dmabuf.height,
+			texture.dmabuf.n_planes, texture.dmabuf.fds,
+			texture.dmabuf.strides, texture.dmabuf.offsets,
+			texture.dmabuf.modifiers);
 
 		obs_display_release_texture(self->obs_display, &texture);
 		gdk_gl_context_clear_current();
 
-		gdk_paintable_invalidate_contents (GDK_PAINTABLE (self));
-		gtk_media_stream_update (GTK_MEDIA_STREAM (self), 0);
+		gdk_paintable_invalidate_contents(GDK_PAINTABLE(self));
+		gtk_media_stream_update(GTK_MEDIA_STREAM(self), 0);
 	}
 
 	g_mutex_lock(&self->shared.mutex);
@@ -232,8 +220,7 @@ queue_redraw_cb (gpointer data)
 	return G_SOURCE_REMOVE;
 }
 
-static void
-queue_stream_update_cb(void *param, uint32_t width, uint32_t height)
+static void queue_stream_update_cb(void *param, uint32_t width, uint32_t height)
 {
 	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(param);
 
@@ -243,16 +230,13 @@ queue_stream_update_cb(void *param, uint32_t width, uint32_t height)
 	g_mutex_unlock(&self->shared.mutex);
 }
 
-
 /*
  * GdkPaintable interface
  */
 
-static void
-obs_display_renderer_paintable_snapshot(GdkPaintable *paintable,
-					GdkSnapshot  *snapshot,
-					double        width,
-					double        height)
+static void obs_display_renderer_paintable_snapshot(GdkPaintable *paintable,
+						    GdkSnapshot *snapshot,
+						    double width, double height)
 {
 	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(paintable);
 
@@ -267,7 +251,8 @@ obs_display_renderer_paintable_get_current_image(GdkPaintable *paintable)
 {
 	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(paintable);
 
-	return self->paintable ? g_object_ref(self->paintable) : gdk_paintable_new_empty(0, 0);
+	return self->paintable ? g_object_ref(self->paintable)
+			       : gdk_paintable_new_empty(0, 0);
 }
 
 static int
@@ -290,34 +275,36 @@ obs_display_renderer_paintable_get_intrinsic_height(GdkPaintable *paintable)
 	return ovi.base_height;
 }
 
-static double
-obs_display_renderer_paintable_get_intrinsic_aspect_ratio(GdkPaintable *paintable)
+static double obs_display_renderer_paintable_get_intrinsic_aspect_ratio(
+	GdkPaintable *paintable)
 {
 	struct obs_video_info ovi;
 
 	obs_get_video_info(&ovi);
 
-	return (double) ovi.base_width / (double) ovi.base_height;
+	return (double)ovi.base_width / (double)ovi.base_height;
 }
 
-static void
-obs_display_renderer_paintable_init (GdkPaintableInterface *iface)
+static void obs_display_renderer_paintable_init(GdkPaintableInterface *iface)
 {
 	iface->snapshot = obs_display_renderer_paintable_snapshot;
-	iface->get_current_image = obs_display_renderer_paintable_get_current_image;
-	iface->get_intrinsic_width = obs_display_renderer_paintable_get_intrinsic_width;
-	iface->get_intrinsic_height = obs_display_renderer_paintable_get_intrinsic_height;
-	iface->get_intrinsic_aspect_ratio = obs_display_renderer_paintable_get_intrinsic_aspect_ratio;
+	iface->get_current_image =
+		obs_display_renderer_paintable_get_current_image;
+	iface->get_intrinsic_width =
+		obs_display_renderer_paintable_get_intrinsic_width;
+	iface->get_intrinsic_height =
+		obs_display_renderer_paintable_get_intrinsic_height;
+	iface->get_intrinsic_aspect_ratio =
+		obs_display_renderer_paintable_get_intrinsic_aspect_ratio;
 }
 
 /*
  * GtkMediaStream overrides
  */
 
-static gboolean
-obs_display_renderer_play(GtkMediaStream *media_stream)
+static gboolean obs_display_renderer_play(GtkMediaStream *media_stream)
 {
-	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER (media_stream);
+	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(media_stream);
 
 	if (self->obs_display)
 		obs_display_set_enabled(self->obs_display, TRUE);
@@ -325,37 +312,36 @@ obs_display_renderer_play(GtkMediaStream *media_stream)
 	return self->obs_display != NULL;
 }
 
-
-static void
-obs_display_renderer_pause(GtkMediaStream *media_stream)
+static void obs_display_renderer_pause(GtkMediaStream *media_stream)
 {
-	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER (media_stream);
+	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(media_stream);
 
 	if (self->obs_display)
 		obs_display_set_enabled(self->obs_display, FALSE);
 }
 
-static void
-obs_display_renderer_realize(GtkMediaStream *media_stream,
-                             GdkSurface     *surface)
+static void obs_display_renderer_realize(GtkMediaStream *media_stream,
+					 GdkSurface *surface)
 {
-	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER (media_stream);
+	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(media_stream);
 	struct obs_video_info ovi;
-	g_autoptr (GError) error = NULL;
+	g_autoptr(GError) error = NULL;
 
 	if (self->gl_context)
 		return;
 
-	self->gl_context = gdk_surface_create_gl_context (surface, &error);
+	self->gl_context = gdk_surface_create_gl_context(surface, &error);
 	if (error) {
-		g_critical ("Failed to create GDK GL context: %s", error->message);
+		g_critical("Failed to create GDK GL context: %s",
+			   error->message);
 		return;
 	}
 
-	gdk_gl_context_realize (self->gl_context, &error);
+	gdk_gl_context_realize(self->gl_context, &error);
 	if (error) {
-		g_critical ("Failed to realize GDK GL context: %s", error->message);
-		g_clear_object (&self->gl_context);
+		g_critical("Failed to realize GDK GL context: %s",
+			   error->message);
+		g_clear_object(&self->gl_context);
 		return;
 	}
 
@@ -368,41 +354,44 @@ obs_display_renderer_realize(GtkMediaStream *media_stream,
 			.format = GS_BGRA,
 			.zsformat = GS_ZS_NONE,
 			.render_mode = GS_DISPLAY_RENDER_MODE_SHARED_TEXTURE,
-		}, 0x000000);
+		},
+		0x000000);
 
 	if (self->obs_display) {
-		obs_display_add_draw_callback(self->obs_display, queue_stream_update_cb, self);
+		obs_display_add_draw_callback(self->obs_display,
+					      queue_stream_update_cb, self);
 
 		for (size_t i = 0; i < self->draw_funcs->len; i++) {
 			const DrawCallbackData *draw_data;
 
-			draw_data = &g_array_index(self->draw_funcs, DrawCallbackData, i);
+			draw_data = &g_array_index(self->draw_funcs,
+						   DrawCallbackData, i);
 			obs_display_add_draw_callback(self->obs_display,
 						      draw_data->draw_func,
 						      draw_data->data);
 		}
 
-		gtk_media_stream_stream_prepared(media_stream, FALSE, TRUE, FALSE, 0);
+		gtk_media_stream_stream_prepared(media_stream, FALSE, TRUE,
+						 FALSE, 0);
 	}
 
 	gdk_gl_context_clear_current();
 }
 
-static void
-obs_display_renderer_unrealize (GtkMediaStream *media_stream,
-				GdkSurface     *surface)
+static void obs_display_renderer_unrealize(GtkMediaStream *media_stream,
+					   GdkSurface *surface)
 {
 	ObsDisplayRenderer *self = OBS_DISPLAY_RENDERER(media_stream);
 
-	if (self->gl_context && gdk_gl_context_get_surface(self->gl_context) == surface)
-		g_clear_object (&self->gl_context);
-	g_clear_pointer (&self->obs_display, obs_display_destroy);
+	if (self->gl_context &&
+	    gdk_gl_context_get_surface(self->gl_context) == surface)
+		g_clear_object(&self->gl_context);
+	g_clear_pointer(&self->obs_display, obs_display_destroy);
 
 	gtk_media_stream_stream_unprepared(media_stream);
 }
 
-static void
-obs_display_renderer_finalize (GObject *object)
+static void obs_display_renderer_finalize(GObject *object)
 {
 	ObsDisplayRenderer *self = (ObsDisplayRenderer *)object;
 
@@ -417,14 +406,13 @@ obs_display_renderer_finalize (GObject *object)
 	g_clear_object(&self->paintable);
 	g_clear_object(&self->gl_context);
 
-	G_OBJECT_CLASS(obs_display_renderer_parent_class)->finalize (object);
+	G_OBJECT_CLASS(obs_display_renderer_parent_class)->finalize(object);
 }
 
-static void
-obs_display_renderer_class_init (ObsDisplayRendererClass *klass)
+static void obs_display_renderer_class_init(ObsDisplayRendererClass *klass)
 {
-	GObjectClass *object_class = G_OBJECT_CLASS (klass);
-	GtkMediaStreamClass *media_stream_class = GTK_MEDIA_STREAM_CLASS (klass);
+	GObjectClass *object_class = G_OBJECT_CLASS(klass);
+	GtkMediaStreamClass *media_stream_class = GTK_MEDIA_STREAM_CLASS(klass);
 
 	object_class->finalize = obs_display_renderer_finalize;
 
@@ -434,30 +422,27 @@ obs_display_renderer_class_init (ObsDisplayRendererClass *klass)
 	media_stream_class->unrealize = obs_display_renderer_unrealize;
 }
 
-static void
-obs_display_renderer_init (ObsDisplayRenderer *self)
+static void obs_display_renderer_init(ObsDisplayRenderer *self)
 {
 	self->draw_funcs = g_array_new(FALSE, TRUE, sizeof(DrawCallbackData));
-	g_mutex_init (&self->shared.mutex);
+	g_mutex_init(&self->shared.mutex);
 }
 
-ObsDisplayRenderer *
-obs_display_renderer_new (void)
+ObsDisplayRenderer *obs_display_renderer_new(void)
 {
-	return g_object_new (OBS_TYPE_DISPLAY_RENDERER, NULL);
+	return g_object_new(OBS_TYPE_DISPLAY_RENDERER, NULL);
 }
 
-void
-obs_display_renderer_add_draw_callback (ObsDisplayRenderer *self,
-                                        ObsDisplayDrawFunc  draw_func,
-                                        gpointer            user_data)
+void obs_display_renderer_add_draw_callback(ObsDisplayRenderer *self,
+					    ObsDisplayDrawFunc draw_func,
+					    gpointer user_data)
 {
 	DrawCallbackData draw_data;
 
-	g_return_if_fail(OBS_IS_DISPLAY_RENDERER (self));
+	g_return_if_fail(OBS_IS_DISPLAY_RENDERER(self));
 	g_return_if_fail(draw_func != NULL);
 
-	draw_data = (DrawCallbackData) {
+	draw_data = (DrawCallbackData){
 		.draw_func = draw_func,
 		.data = user_data,
 	};
@@ -465,26 +450,29 @@ obs_display_renderer_add_draw_callback (ObsDisplayRenderer *self,
 	g_array_append_val(self->draw_funcs, draw_data);
 
 	if (self->obs_display)
-		obs_display_add_draw_callback(self->obs_display, draw_func, user_data);
+		obs_display_add_draw_callback(self->obs_display, draw_func,
+					      user_data);
 }
 
-void
-obs_display_renderer_remove_draw_callback (ObsDisplayRenderer *self,
-                                           ObsDisplayDrawFunc  draw_func,
-                                           gpointer            user_data)
+void obs_display_renderer_remove_draw_callback(ObsDisplayRenderer *self,
+					       ObsDisplayDrawFunc draw_func,
+					       gpointer user_data)
 {
-	g_return_if_fail(OBS_IS_DISPLAY_RENDERER (self));
+	g_return_if_fail(OBS_IS_DISPLAY_RENDERER(self));
 	g_return_if_fail(draw_func != NULL);
 
 	if (self->obs_display)
-		obs_display_remove_draw_callback(self->obs_display, draw_func, user_data);
+		obs_display_remove_draw_callback(self->obs_display, draw_func,
+						 user_data);
 
 	for (size_t i = 0; i < self->draw_funcs->len; i++) {
 		const DrawCallbackData *draw_data;
 
-		draw_data = &g_array_index(self->draw_funcs, DrawCallbackData, i);
+		draw_data =
+			&g_array_index(self->draw_funcs, DrawCallbackData, i);
 
-		if (draw_data->draw_func == draw_func && draw_data->data == user_data) {
+		if (draw_data->draw_func == draw_func &&
+		    draw_data->data == user_data) {
 			g_array_remove_index(self->draw_funcs, i);
 			break;
 		}

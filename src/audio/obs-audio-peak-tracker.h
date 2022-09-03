@@ -53,30 +53,26 @@ typedef struct {
 
 } ObsAudioPeakTracker;
 
-void     obs_audio_peak_tracker_init       (ObsAudioPeakTracker *self);
-void     obs_audio_peak_tracker_clear      (ObsAudioPeakTracker *self);
-void     obs_audio_peak_tracker_start      (ObsAudioPeakTracker *self,
-                                            double               decay_rate,
-                                            double               minimum_level_db,
-                                            double               magnitude_integration_time,
-                                            int64_t              peak_hold_duration_us,
-                                            int64_t              input_peak_hold_duration_us);
-void     obs_audio_peak_tracker_tick       (ObsAudioPeakTracker *self,
-                                            int64_t              now_us,
-                                            int64_t              ellapsed_time_us);
-void     obs_audio_peak_tracker_reset      (ObsAudioPeakTracker *self);
-void     obs_audio_peak_tracker_set_levels (ObsAudioPeakTracker *self,
-                                            int64_t              update_time_us,
-                                            const float         *magnitudes,
-                                            const float         *peaks,
-                                            const float         *input_peaks,
-                                            size_t               n_channels);
-void     obs_audio_peak_tracker_get_levels (ObsAudioPeakTracker *self,
-                                            uint32_t             channel,
-                                            float               *out_magnitude,
-                                            float               *out_peak,
-                                            float               *out_input_peak);
-gboolean obs_audio_peak_tracker_is_idle    (ObsAudioPeakTracker *self,
-                                            int64_t              now_us);
+void obs_audio_peak_tracker_init(ObsAudioPeakTracker *self);
+void obs_audio_peak_tracker_clear(ObsAudioPeakTracker *self);
+void obs_audio_peak_tracker_start(ObsAudioPeakTracker *self, double decay_rate,
+				  double minimum_level_db,
+				  double magnitude_integration_time,
+				  int64_t peak_hold_duration_us,
+				  int64_t input_peak_hold_duration_us);
+void obs_audio_peak_tracker_tick(ObsAudioPeakTracker *self, int64_t now_us,
+				 int64_t ellapsed_time_us);
+void obs_audio_peak_tracker_reset(ObsAudioPeakTracker *self);
+void obs_audio_peak_tracker_set_levels(ObsAudioPeakTracker *self,
+				       int64_t update_time_us,
+				       const float *magnitudes,
+				       const float *peaks,
+				       const float *input_peaks,
+				       size_t n_channels);
+void obs_audio_peak_tracker_get_levels(ObsAudioPeakTracker *self,
+				       uint32_t channel, float *out_magnitude,
+				       float *out_peak, float *out_input_peak);
+gboolean obs_audio_peak_tracker_is_idle(ObsAudioPeakTracker *self,
+					int64_t now_us);
 
 G_END_DECLS

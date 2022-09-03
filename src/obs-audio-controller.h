@@ -25,14 +25,14 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_AUDIO_CONTROLLER (obs_audio_controller_get_type())
-G_DECLARE_FINAL_TYPE (ObsAudioController, obs_audio_controller, OBS, AUDIO_CONTROLLER, GObject)
+G_DECLARE_FINAL_TYPE(ObsAudioController, obs_audio_controller, OBS,
+		     AUDIO_CONTROLLER, GObject)
 
-ObsAudioController *obs_audio_controller_new                (void);
-void                obs_audio_controller_initialize         (ObsAudioController *self);
-void                obs_audio_controller_shutdown           (ObsAudioController *self);
-GListModel         *obs_audio_controller_get_input_devices  (ObsAudioController *self);
-GListModel         *obs_audio_controller_get_output_devices (ObsAudioController *self);
-GListModel         *obs_audio_controller_get_devices        (ObsAudioController *self);
-
+ObsAudioController *obs_audio_controller_new(void);
+void obs_audio_controller_initialize(ObsAudioController *self);
+void obs_audio_controller_shutdown(ObsAudioController *self);
+GListModel *obs_audio_controller_get_input_devices(ObsAudioController *self);
+GListModel *obs_audio_controller_get_output_devices(ObsAudioController *self);
+GListModel *obs_audio_controller_get_devices(ObsAudioController *self);
 
 G_END_DECLS

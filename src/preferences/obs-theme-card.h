@@ -25,9 +25,9 @@
 G_BEGIN_DECLS
 
 #define OBS_TYPE_THEME_CARD (obs_theme_card_get_type())
-G_DECLARE_FINAL_TYPE (ObsThemeCard, obs_theme_card, OBS, THEME_CARD, GtkFlowBoxChild)
+G_DECLARE_FINAL_TYPE(ObsThemeCard, obs_theme_card, OBS, THEME_CARD,
+		     GtkFlowBoxChild)
 
-GtkWidget * obs_theme_card_new (const char *title,
-				const char *theme_path);
+GtkWidget *obs_theme_card_new(const char *title, const char *theme_path);
 
 G_END_DECLS

@@ -25,15 +25,14 @@ static const struct {
 	const char *string;
 	AdwColorScheme alternative;
 } color_schemes_map[] = {
-	{ ADW_COLOR_SCHEME_DEFAULT,      "default", ADW_COLOR_SCHEME_DEFAULT },
-	{ ADW_COLOR_SCHEME_FORCE_LIGHT,  "light",   ADW_COLOR_SCHEME_FORCE_LIGHT },
-	{ ADW_COLOR_SCHEME_PREFER_LIGHT, "light",   ADW_COLOR_SCHEME_FORCE_LIGHT },
-	{ ADW_COLOR_SCHEME_PREFER_DARK,  "dark",    ADW_COLOR_SCHEME_FORCE_DARK },
-	{ ADW_COLOR_SCHEME_FORCE_DARK,   "dark",    ADW_COLOR_SCHEME_FORCE_DARK },
+	{ADW_COLOR_SCHEME_DEFAULT, "default", ADW_COLOR_SCHEME_DEFAULT},
+	{ADW_COLOR_SCHEME_FORCE_LIGHT, "light", ADW_COLOR_SCHEME_FORCE_LIGHT},
+	{ADW_COLOR_SCHEME_PREFER_LIGHT, "light", ADW_COLOR_SCHEME_FORCE_LIGHT},
+	{ADW_COLOR_SCHEME_PREFER_DARK, "dark", ADW_COLOR_SCHEME_FORCE_DARK},
+	{ADW_COLOR_SCHEME_FORCE_DARK, "dark", ADW_COLOR_SCHEME_FORCE_DARK},
 };
 
-AdwColorScheme
-obs_color_scheme_from_string (const char *string)
+AdwColorScheme obs_color_scheme_from_string(const char *string)
 {
 	for (size_t i = 0; i < G_N_ELEMENTS(color_schemes_map); i++) {
 		if (g_strcmp0(string, color_schemes_map[i].string) == 0)
@@ -43,8 +42,7 @@ obs_color_scheme_from_string (const char *string)
 	return ADW_COLOR_SCHEME_FORCE_DARK;
 }
 
-const char *
-obs_color_scheme_to_string (AdwColorScheme color_scheme)
+const char *obs_color_scheme_to_string(AdwColorScheme color_scheme)
 {
 	return color_schemes_map[color_scheme].string;
 }
