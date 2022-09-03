@@ -54,7 +54,6 @@ _configure_obs() {
     fi
 
     cmake -S . -B ${BUILD_DIR} -G Ninja \
-        -DCEF_ROOT_DIR="${DEPS_BUILD_DIR}/cef_binary_${LINUX_CEF_BUILD_VERSION:-${CI_LINUX_CEF_VERSION}}_linux64" \
         -DCMAKE_BUILD_TYPE=${BUILD_CONFIG} \
         -DLINUX_PORTABLE=${PORTABLE_BUILD:-OFF} \
         -DENABLE_AJA=OFF \
