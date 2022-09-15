@@ -67,7 +67,8 @@ jobs:
     strategy:
       matrix:
         arch: ['x86_64', 'arm64']
-    if: always()
+    #TODO: enable macOS
+    if: ${{ false }}
     needs: [clang_check]
     env:
       MACOSX_DEPLOYMENT_TARGET_X86_64: '10.15'
@@ -192,7 +193,8 @@ jobs:
     strategy:
       matrix:
         ubuntu: ['ubuntu-20.04', 'ubuntu-22.04']
-    if: always()
+    #TODO: enable non-Flatpak Linux builds
+    if: ${{ false }}
     needs: [clang_check]
     defaults:
       run:
@@ -272,7 +274,8 @@ jobs:
     name: '02 - Windows'
     runs-on: [windows-2022]
     needs: [clang_check]
-    if: always()
+    #TODO: enable Windows
+    if: ${{ false }}
     strategy:
       matrix:
         arch: [x64, x86]
