@@ -342,6 +342,11 @@
     {
       "name" : "libpanel",
       "buildsystem" : "meson",
+      "config-opts" : [
+        "-Ddocs=disabled",
+        "-Dintrospection=disabled",
+        "-Dvapi=false"
+      ],
       "sources" : [
         {
           "type" : "git",
