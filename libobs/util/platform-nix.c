@@ -28,8 +28,6 @@
 #include <time.h>
 #include <signal.h>
 
-#include "obsconfig.h"
-
 #if !defined(__APPLE__)
 #include <sys/times.h>
 #include <sys/wait.h>
