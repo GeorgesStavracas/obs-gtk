@@ -368,7 +368,8 @@
         "-DENABLE_VST=OFF",
         "-DENABLE_AJA=ON",
         "-DENABLE_UI=OFF",
-        "-DENABLE_GTK4=ON"
+        "-DENABLE_GTK4=ON",
+        "-DOBS_VERSION_OVERRIDE=0.0.1"
       ],
       "secret-opts" : [
         "-DRESTREAM_CLIENTID=$RESTREAM_CLIENTID",
