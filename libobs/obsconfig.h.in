@@ -16,7 +16,6 @@
 #define OBS_PLUGIN_DESTINATION "@OBS_PLUGIN_DESTINATION@"
 
 #cmakedefine LINUX_PORTABLE
-#cmakedefine PULSEAUDIO_FOUND
 #cmakedefine XCB_XINPUT_FOUND
 
 /* NOTE: Release candidate version numbers internally are always the previous
