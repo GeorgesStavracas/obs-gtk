@@ -110,3 +110,6 @@ tags
 /flatpak_app/
 /repo/
 /CI/flatpak/flatpak-github-action-modified-*
+
+/subprojects
+!/subprojects/*.wrap

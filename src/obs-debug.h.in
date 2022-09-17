@@ -33,7 +33,12 @@
 
 G_BEGIN_DECLS
 
-#cmakedefine ENABLE_TRACING
+#ifndef OBS_ENABLE_TRACE
+# define OBS_ENABLE_TRACE @ENABLE_TRACING@
+#endif
+#if OBS_ENABLE_TRACE != 1
+# undef OBS_ENABLE_TRACE
+#endif
 
 /**
  * OBS_LOG_LEVEL_TRACE: (skip)
