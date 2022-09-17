@@ -46,6 +46,33 @@ static void config_data_free(gpointer data)
 	g_free(config_data);
 }
 
+static char *build_dir(ObsConfigScope scope, const char *id)
+{
+	const char *config_dir;
+	char *path;
+
+	config_dir = g_get_user_config_dir();
+
+	switch (scope) {
+	case OBS_CONFIG_SCOPE_GLOBAL:
+		path = g_build_filename(config_dir, NULL);
+		break;
+	case OBS_CONFIG_SCOPE_PROFILE:
+		path = g_build_filename(config_dir, "profiles", id, NULL);
+		break;
+	case OBS_CONFIG_SCOPE_SCENE_COLLECTION:
+		path = g_build_filename(config_dir, "scenes", id, NULL);
+		break;
+	case OBS_CONFIG_SCOPE_PLUGIN:
+		path = g_build_filename(config_dir, "plugins", id, NULL);
+		break;
+	default:
+		g_assert_not_reached();
+	}
+
+	return path;
+}
+
 static char *build_path(ObsConfigScope scope, const char *id)
 {
 	const char *config_dir;
@@ -124,11 +151,27 @@ config_t *obs_config_manager_open(ObsConfigManager *self, ObsConfigScope scope,
 	if (!data) {
 		config_t *config;
 		char *config_file;
+		int errcode;
 
 		config_file = build_path(scope, id);
+		errcode = config_open(&config, config_file, open_type);
 
-		if (config_open(&config, config_file, open_type) !=
-		    CONFIG_SUCCESS) {
+		switch (open_type) {
+		case CONFIG_OPEN_ALWAYS:
+			if (errcode == CONFIG_FILENOTFOUND) {
+				char *dir = build_dir(scope, id);
+				g_mkdir_with_parents(dir, 0755);
+				g_free(dir);
+				errcode = config_open(&config, config_file,
+						      open_type);
+			}
+			break;
+
+		case CONFIG_OPEN_EXISTING:
+			break;
+		}
+
+		if (errcode != CONFIG_SUCCESS) {
 			g_free(config_file);
 			return NULL;
 		}
