@@ -77,7 +77,7 @@ configure_file(
   configuration: cdata,
 )
 
-jansson_lib = library('jansson',
+jansson_lib = static_library('jansson',
   'src/dump.c',
   'src/error.c',
   'src/hashtable.c',
