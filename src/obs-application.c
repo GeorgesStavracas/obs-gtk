@@ -249,7 +249,6 @@ static void obs_application_startup(GApplication *application)
 {
 	ObsApplication *self = OBS_APPLICATION(application);
 	char path[512];
-	char *theme;
 
 	profiler_start();
 	profile_register_root("obs_application_startup", 0);
