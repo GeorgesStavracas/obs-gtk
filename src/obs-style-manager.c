@@ -94,12 +94,6 @@ static void update_widget_stylesheet(ObsStyleManager *self, GtkWidget *widget)
 
 static void update_widgets_stylesheets(ObsStyleManager *self)
 {
-	AdwStyleManager *manager = adw_style_manager_get_default();
-	gboolean is_dark, is_hc;
-
-	is_dark = adw_style_manager_get_dark(manager);
-	is_hc = adw_style_manager_get_high_contrast(manager);
-
 	for (unsigned int i = 0; i < self->styled_widgets->len; i++)
 		update_widget_stylesheet(
 			self, g_ptr_array_index(self->styled_widgets, i));
