@@ -50,7 +50,6 @@ static void obs_mixer_page_init(ObsMixerPage *self)
 {
 	ObsAudioController *audio_controller;
 	GApplication *application;
-	GListModel *devices;
 
 	gtk_widget_init_template(GTK_WIDGET(self));
 
