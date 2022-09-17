@@ -357,29 +357,10 @@
     },
     {
       "name" : "obs",
-      "buildsystem" : "cmake-ninja",
+      "buildsystem" : "meson",
       "builddir" : true,
       "config-opts" : [
-        "-DCMAKE_BUILD_TYPE=Release",
-        "-DENABLE_BROWSER=OFF",
-        "-DUSE_XDG=ON",
-        "-DENABLE_PULSEAUDIO=ON",
-        "-DENABLE_RTMPS=ON",
-        "-DENABLE_VST=OFF",
-        "-DENABLE_AJA=ON",
-        "-DENABLE_UI=OFF",
-        "-DENABLE_GTK4=ON",
-        "-DOBS_VERSION_OVERRIDE=0.0.1"
-      ],
-      "secret-opts" : [
-        "-DRESTREAM_CLIENTID=$RESTREAM_CLIENTID",
-        "-DRESTREAM_HASH=$RESTREAM_HASH",
-        "-DTWITCH_CLIENTID=$TWITCH_CLIENTID",
-        "-DTWITCH_HASH=$TWITCH_HASH",
-        "-DYOUTUBE_CLIENTID=$YOUTUBE_CLIENTID",
-        "-DYOUTUBE_CLIENTID_HASH=$YOUTUBE_CLIENTID_HASH",
-        "-DYOUTUBE_SECRET=$YOUTUBE_SECRET",
-        "-DYOUTUBE_SECRET_HASH=$YOUTUBE_SECRET_HASH"
+        "--buildtype=debugoptimized"
       ],
       "sources" : [
         {
