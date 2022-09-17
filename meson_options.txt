@@ -1,0 +1,28 @@
+option('hvenc', type: 'boolean', value: true, description: 'Enable HEVC encoders')
+option('tracing', type: 'boolean', value: false, description: 'Enable trace messages')
+option('ui', type: 'boolean', value: true, description: 'Enable GTK4 UI')
+
+# FFmpeg
+option('ffmpeg-debug-mux', type: 'boolean', value: false, description: 'Enable FFmpeg-mux debugging')
+option('ffmpeg-logging', type: 'boolean', value: false, description: 'Enables obs-ffmpeg logging')
+option('ffmpeg-new-mpegts', type: 'boolean', value: true, description: 'Use native SRT/RIST mpegts output')
+
+# Filters
+option('rnnoise', type: 'boolean', value: true, description: 'Build RNNoise noise supression filter')
+option('speexdsp', type: 'boolean', value: true, description: 'Build SpeexDSP-based noise suppression filter')
+
+# Plugins
+option('aja', type: 'boolean', value: true, description: 'Build OBS with aja support')
+#TODO: option('decklink', type: 'boolean', value: true, description: 'Build OBS with Decklink support')
+option('fdk', type: 'boolean', value: true, description: 'Enable FDK AAC support')
+option('freetype', type: 'boolean', value: true, description: 'Enable FreeType text plugin')
+option('sndio', type: 'boolean', value: false, description: 'Enable sndio plugin (Unix-only)')
+
+# mbedTLS
+option('mbedtls', type: 'feature', value: 'auto', description: 'Enable RTMPS support with mbedTLS')
+option('static-mbedtls', type: 'boolean', value: false, description: 'Statically link mbedTLS into binary')
+
+# RTMP
+option('rtmp-service-updates', type: 'boolean', value: false, description: 'Checks for service updates')
+option('rtmp-services-url', type: 'string', value: 'https://obsproject.com/obs2_update/rtmp-services',
+       description: 'Default services package URL')
