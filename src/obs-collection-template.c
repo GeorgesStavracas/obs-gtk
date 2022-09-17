@@ -276,6 +276,9 @@ gpointer obs_collection_template_create_finish(ObsCollectionTemplate *self,
 {
 	g_return_val_if_fail(OBS_IS_COLLECTION_TEMPLATE(self), NULL);
 	g_return_val_if_fail(g_task_is_valid(result, self), NULL);
+	g_return_val_if_fail(g_task_get_source_tag(G_TASK(result)) ==
+				     obs_collection_template_create_async,
+			     NULL);
 
 	return g_task_propagate_pointer(G_TASK(result), error);
 }
