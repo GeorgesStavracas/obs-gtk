@@ -71,13 +71,9 @@ static inline int get_n_audio_channels(ObsAudioDeviceControls *self)
 
 static const char *get_icon_name_from_source(ObsAudioDeviceControls *self)
 {
-	obs_source_t *source;
 	gboolean muted;
-	const char *id;
 
 	muted = obs_audio_device_get_muted(self->audio_device);
-	source = obs_audio_device_get_source(self->audio_device);
-	id = obs_source_get_id(source);
 
 	switch (obs_audio_device_get_device_type(self->audio_device)) {
 	case OBS_AUDIO_DEVICE_INPUT:
