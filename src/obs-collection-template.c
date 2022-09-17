@@ -29,6 +29,7 @@
 	"/com/obsproject/Studio/GTK4/assets/collection-templates/%s.svg"
 
 typedef struct {
+	char *collection_id;
 	char *collection_name;
 	config_t *config;
 } CreateData;
@@ -65,6 +66,7 @@ static void create_data_free(gpointer data)
 	if (!data)
 		return;
 
+	g_clear_pointer(&create_data->collection_id, g_free);
 	g_clear_pointer(&create_data->collection_name, g_free);
 	g_free(create_data);
 }
@@ -229,6 +231,7 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	CreateData *data = NULL;
 	config_t *config;
 	GTask *task = NULL;
+	char *id = NULL;
 
 	g_return_if_fail(OBS_IS_COLLECTION_TEMPLATE(self));
 	g_return_if_fail(!cancellable || G_IS_CANCELLABLE(cancellable));
@@ -239,24 +242,22 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	config_manager = obs_application_get_config_manager(
 		OBS_APPLICATION(application));
 
-	config = obs_config_manager_open(config_manager,
-					 OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-					 collection_name, CONFIG_OPEN_EXISTING);
-	if (config) {
-		obs_config_manager_release(config_manager,
-					   OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-					   collection_name);
+	do {
+		g_clear_pointer(&id, g_free);
+		if (config) {
+			obs_config_manager_release(config_manager,
+						   OBS_CONFIG_SCOPE_SCENE_COLLECTION,
+						   collection_name);
+		}
 
-		task = g_task_new(self, cancellable, callback, user_data);
-		g_task_set_source_tag(task,
-				      obs_collection_template_create_async);
-		g_task_return_new_error(task, G_IO_ERROR, G_IO_ERROR_EXISTS,
-					"Collection already exists");
-		g_object_unref(task);
-		return;
-	}
+		id = g_uuid_string_random ();
+		config = obs_config_manager_open(config_manager,
+						 OBS_CONFIG_SCOPE_SCENE_COLLECTION,
+						 id, CONFIG_OPEN_EXISTING);
+	} while (config != NULL);
 
 	data = g_new0(CreateData, 1);
+	data->collection_id = g_steal_pointer(&id);
 	data->collection_name = g_strdup(collection_name);
 	data->config = obs_config_manager_open(
 		config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION,
