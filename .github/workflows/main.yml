@@ -54,13 +54,6 @@ jobs:
           ./CI/check-format.sh
           ./CI/check-changes.sh
 
-      - name: 'Install cmake-format'
-        run: sudo pip install cmakelang
-
-      - name: 'Run cmake-format'
-        run: |
-          ./CI/check-cmake.sh
-
   macos_build:
     name: '02 - macOS'
     runs-on: [macos-12]
