@@ -28,7 +28,7 @@ obs_plugin_datadir = obs_datadir / 'obs' / 'obs-plugins'
 ####################
 
 gio_dep = dependency('gio-2.0')
-jansson_dep = dependency('jansson')
+jansson_dep = dependency('jansson', default_options: 'default_library=static')
 libavcodec_dep = dependency('libavcodec')
 libavdevice_dep = dependency('libavdevice')
 libavfilter_dep = dependency('libavfilter')
