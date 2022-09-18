@@ -99,7 +99,7 @@ elif fs.is_file('ftl-sdk' / 'CMakeLists.txt')
   obs_outputs_c_args += '-DFTL_STATIC_COMPILE'
 endif
 
-obs_outputs_plugin = shared_module('obs-outputs',
+shared_module('obs-outputs',
   sources: obs_outputs_sources,
   dependencies: obs_outputs_deps,
   c_args: obs_outputs_c_args,

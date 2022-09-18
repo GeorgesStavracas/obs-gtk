@@ -11,7 +11,7 @@ linux_pulseaudio_sources = files([
   'pulse-wrapper.c',
 ])
 
-linux_pulseaudio_plugin = shared_module('linux-pulseaudio',
+shared_module('linux-pulseaudio',
   sources: linux_pulseaudio_sources,
   dependencies: linux_pulseaudio_deps,
   install: true,

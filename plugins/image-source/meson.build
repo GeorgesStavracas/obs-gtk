@@ -8,7 +8,7 @@ image_source_sources = files([
   'obs-slideshow.c',
 ])
 
-image_source_plugin = shared_module('image-source',
+shared_module('image-source',
   sources: image_source_sources,
   dependencies: image_source_deps,
   install: true,

@@ -43,7 +43,7 @@ rtmp_services_sources = generated_sources + files([
   'rtmp-format-ver.h',
 ])
 
-rtmp_services_plugin = shared_module('rtmp-services',
+shared_module('rtmp-services',
   sources: rtmp_services_sources,
   dependencies: rtmp_services_deps,
   install: true,

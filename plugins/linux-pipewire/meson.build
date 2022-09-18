@@ -13,7 +13,7 @@ linux_pipewire_sources = files([
   'screencast-portal.c',
 ])
 
-linux_pipewire_plugin = shared_module('linux-pipewire',
+shared_module('linux-pipewire',
   sources: linux_pipewire_sources,
   dependencies: linux_pipewire_deps,
   install: true,

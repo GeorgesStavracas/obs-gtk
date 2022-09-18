@@ -5,7 +5,7 @@ obs_libfdk_deps = [
 
 obs_libfdk_sources = files('obs-libfdk.c')
 
-obs_libfdk_plugin = shared_module('obs-libfdk',
+shared_module('obs-libfdk',
   sources: obs_libfdk_sources,
   dependencies: obs_libfdk_deps,
   install: true,
