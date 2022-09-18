@@ -15,7 +15,7 @@ obs_transitions_sources = files([
   'transition-swipe.c',
 ])
 
-obs_transitions_plugin = shared_module('obs-transitions',
+shared_module('obs-transitions',
   sources: obs_transitions_sources,
   dependencies: obs_transitions_deps,
   install: true,

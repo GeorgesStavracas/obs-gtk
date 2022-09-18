@@ -10,7 +10,7 @@ obs_x264_sources = files([
   'obs-x264-test.c',
 ])
 
-obs_x264_plugin = shared_module('obs-x264',
+shared_module('obs-x264',
   sources: obs_x264_sources,
   dependencies: obs_x264_deps,
   install: true,

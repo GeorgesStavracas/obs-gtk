@@ -33,7 +33,7 @@ if host_system == 'linux'
   aja_cpp_args += [ '-DAJALinux', '-DAJA_LINUX' ]
 endif
 
-aja_plugin = shared_module('aja',
+shared_module('aja',
   sources: aja_sources,
   dependencies: aja_deps,
   include_directories: aja_include_directories,
