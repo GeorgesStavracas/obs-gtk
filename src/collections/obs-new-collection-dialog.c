@@ -131,7 +131,7 @@ obs_new_collection_dialog_class_init(ObsNewCollectionDialogClass *klass)
 
 	gtk_widget_class_set_template_from_resource(
 		widget_class,
-		"/com/obsproject/Studio/GTK4/ui/scenes/obs-new-collection-dialog.ui");
+		"/com/obsproject/Studio/GTK4/ui/collections/obs-new-collection-dialog.ui");
 
 	gtk_widget_class_bind_template_child(
 		widget_class, ObsNewCollectionDialog, collection_name_row);

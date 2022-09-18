@@ -100,7 +100,7 @@ obs_collection_template_icon_class_init(ObsCollectionTemplateIconClass *klass)
 
 	gtk_widget_class_set_template_from_resource(
 		widget_class,
-		"/com/obsproject/Studio/GTK4/ui/scenes/obs-collection-template-icon.ui");
+		"/com/obsproject/Studio/GTK4/ui/collections/obs-collection-template-icon.ui");
 
 	gtk_widget_class_bind_template_child(widget_class,
 					     ObsCollectionTemplateIcon, image);

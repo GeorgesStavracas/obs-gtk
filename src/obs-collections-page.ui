@@ -4,7 +4,7 @@
   <requires lib="Adw" version="1.0"/>
   <requires lib="Panel" version="1.0"/>
 
-  <template class="ObsScenesPage" parent="AdwBin">
+  <template class="ObsCollectionsPage" parent="AdwBin">
 
     <child>
       <object class="PanelDock" id="dock">
@@ -24,13 +24,13 @@
                 <property name="child">
                   <object class="AdwStatusPage">
                     <property name="icon-name">music-queue-symbolic</property>
-                    <property name="title" translatable="yes">Scene Collections</property>
+                    <property name="title" translatable="yes">Collections</property>
                     <property name="description" translatable="yes">Create a new collection and start designing your scenes</property>
                     <child>
                       <object class="GtkButton">
                         <property name="halign">center</property>
                         <property name="label" translatable="yes">Create Collection</property>
-                        <property name="action-name">scenes.new-collection</property>
+                        <property name="action-name">collections.new-collection</property>
                         <style>
                           <class name="suggested-action" />
                           <class name="pill" />

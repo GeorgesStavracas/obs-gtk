@@ -96,11 +96,11 @@
 
             <child>
               <object class="AdwViewStackPage">
-                <property name="name">scenes</property>
+                <property name="name">collections</property>
                 <property name="icon-name">music-queue-symbolic</property>
-                <property name="title" translatable="yes">Scenes</property>
+                <property name="title" translatable="yes">Collections</property>
                 <property name="child">
-                  <object class="ObsScenesPage">
+                  <object class="ObsCollectionsPage">
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                   </object>

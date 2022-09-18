@@ -1,4 +1,4 @@
-/* obs-scenes-page.h
+/* obs-collections-page.h
  *
  * Copyright 2022 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -24,7 +24,8 @@
 
 G_BEGIN_DECLS
 
-#define OBS_TYPE_SCENES_PAGE (obs_scenes_page_get_type())
-G_DECLARE_FINAL_TYPE(ObsScenesPage, obs_scenes_page, OBS, SCENES_PAGE, AdwBin)
+#define OBS_TYPE_COLLECTIONS_PAGE (obs_collections_page_get_type())
+G_DECLARE_FINAL_TYPE(ObsCollectionsPage, obs_collections_page, OBS,
+		     COLLECTIONS_PAGE, AdwBin)
 
 G_END_DECLS
