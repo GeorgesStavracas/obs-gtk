@@ -129,7 +129,6 @@ libobs_pc = pkg_config.generate(libobs,
   description: 'Core library of the OBS project',
   version: meson.project_version(),
   subdirs: 'obs',
-  install_dir: obs_libdir / 'pkgconfig',
 )
 
 
