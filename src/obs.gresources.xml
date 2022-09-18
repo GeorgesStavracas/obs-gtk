@@ -2,17 +2,17 @@
 <gresources>
   <gresource prefix="/com/obsproject/Studio/GTK4/ui">
     <file>audio/obs-audio-device-controls.ui</file>
-    <file>obs-activities-page.ui</file>
-    <file>obs-mixer-page.ui</file>
-    <file>obs-scene-editor.ui</file>
-    <file>obs-scenes-page.ui</file>
-    <file>obs-window.ui</file>
+    <file>collections/obs-collection-template-icon.ui</file>
+    <file>collections/obs-new-collection-dialog.ui</file>
     <file>preferences/obs-appearance-page.ui</file>
     <file>preferences/obs-preferences-dialog.ui</file>
     <file>preferences/obs-theme-card.ui</file>
     <file>profiles/obs-profiles-dialog.ui</file>
-    <file>scenes/obs-collection-template-icon.ui</file>
-    <file>scenes/obs-new-collection-dialog.ui</file>
+    <file>obs-activities-page.ui</file>
+    <file>obs-collections-page.ui</file>
+    <file>obs-mixer-page.ui</file>
+    <file>obs-scene-editor.ui</file>
+    <file>obs-window.ui</file>
   </gresource>
 
   <!-- Styles -->

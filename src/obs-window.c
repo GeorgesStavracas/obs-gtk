@@ -22,7 +22,7 @@
 
 #include "obs-activities-page.h"
 #include "obs-mixer-page.h"
-#include "obs-scenes-page.h"
+#include "obs-collections-page.h"
 #include "preferences/obs-preferences-dialog.h"
 #include "profiles/obs-profiles-dialog.h"
 
@@ -158,7 +158,7 @@ static void obs_window_class_init(ObsWindowClass *klass)
 
 	g_type_ensure(OBS_TYPE_ACTIVITIES_PAGE);
 	g_type_ensure(OBS_TYPE_MIXER_PAGE);
-	g_type_ensure(OBS_TYPE_SCENES_PAGE);
+	g_type_ensure(OBS_TYPE_COLLECTIONS_PAGE);
 
 	object_class->finalize = obs_window_finalize;
 	object_class->constructed = obs_window_constructed;

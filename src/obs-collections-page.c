@@ -1,4 +1,4 @@
-/* obs-scenes-page.c
+/* obs-collections-page.c
  *
  * Copyright 2022 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
@@ -18,16 +18,16 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "obs-scenes-page.h"
+#include "obs-collections-page.h"
 
-#include "scenes/obs-new-collection-dialog.h"
+#include "collections/obs-new-collection-dialog.h"
 #include "obs-scene-editor.h"
 
-struct _ObsScenesPage {
+struct _ObsCollectionsPage {
 	AdwBin parent_instance;
 };
 
-G_DEFINE_FINAL_TYPE(ObsScenesPage, obs_scenes_page, ADW_TYPE_BIN)
+G_DEFINE_FINAL_TYPE(ObsCollectionsPage, obs_collections_page, ADW_TYPE_BIN)
 
 static void on_new_collection_action_cb(GtkWidget *widget,
 					const char *action_name,
@@ -35,7 +35,7 @@ static void on_new_collection_action_cb(GtkWidget *widget,
 {
 	GtkWindow *dialog;
 
-	g_assert(g_strcmp0(action_name, "scenes.new-collection") == 0);
+	g_assert(g_strcmp0(action_name, "collections.new-collection") == 0);
 	g_assert(parameter == NULL);
 
 	dialog = obs_new_collection_dialog_new();
@@ -44,7 +44,7 @@ static void on_new_collection_action_cb(GtkWidget *widget,
 	gtk_window_present(dialog);
 }
 
-static void obs_scenes_page_class_init(ObsScenesPageClass *klass)
+static void obs_collections_page_class_init(ObsCollectionsPageClass *klass)
 {
 	GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
@@ -52,13 +52,14 @@ static void obs_scenes_page_class_init(ObsScenesPageClass *klass)
 
 	gtk_widget_class_set_template_from_resource(
 		widget_class,
-		"/com/obsproject/Studio/GTK4/ui/obs-scenes-page.ui");
+		"/com/obsproject/Studio/GTK4/ui/obs-collections-page.ui");
 
-	gtk_widget_class_install_action(widget_class, "scenes.new-collection",
-					NULL, on_new_collection_action_cb);
+	gtk_widget_class_install_action(widget_class,
+					"collections.new-collection", NULL,
+					on_new_collection_action_cb);
 }
 
-static void obs_scenes_page_init(ObsScenesPage *self)
+static void obs_collections_page_init(ObsCollectionsPage *self)
 {
 	gtk_widget_init_template(GTK_WIDGET(self));
 }
