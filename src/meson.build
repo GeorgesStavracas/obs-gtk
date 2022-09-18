@@ -22,6 +22,7 @@ obs_gtk_sources = files([
   'obs-application.c',
   'obs-audio-controller.c',
   'obs-audio-device.c',
+  'obs-collection.c',
   'obs-collection-template.c',
   'obs-config-manager.c',
   'obs-display-renderer.c',
