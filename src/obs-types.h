@@ -21,11 +21,13 @@
 #pragma once
 
 #include <glib.h>
+#include <obs.h>
 
 G_BEGIN_DECLS
 
 typedef struct _ObsAudioController ObsAudioController;
 typedef struct _ObsAudioDevice ObsAudioDevice;
+typedef struct _ObsCollection ObsCollection;
 typedef struct _ObsCollectionTemplate ObsCollectionTemplate;
 typedef struct _ObsConfigManager ObsConfigManager;
 typedef struct _ObsStyleManager ObsStyleManager;
