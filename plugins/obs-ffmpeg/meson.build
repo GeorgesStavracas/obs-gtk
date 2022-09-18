@@ -70,7 +70,7 @@ if host_system not in ['windows', 'darwin']
   obs_ffmpeg_sources += files('obs-ffmpeg-vaapi.c')
 endif
 
-obs_ffmpeg_plugin = shared_library('obs-ffmpeg',
+obs_ffmpeg_plugin = shared_module('obs-ffmpeg',
   sources: obs_ffmpeg_sources,
   dependencies: obs_ffmpeg_deps,
   c_args: obs_ffmpeg_c_args,

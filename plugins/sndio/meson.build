@@ -8,7 +8,7 @@ sndio_sources = files([
   'sndio-input.c',
 ])
 
-sndio_plugin = shared_library('sndio',
+sndio_plugin = shared_module('sndio',
   sources: sndio_sources,
   dependencies: sndio_deps,
   install: true,
