@@ -36,7 +36,7 @@ if host_system not in ['windows', 'darwin']
   ])
 endif
 
-libobs_opengl = shared_library('obs-opengl',
+libobs_opengl = shared_module('obs-opengl',
   sources: libobs_opengl_sources,
   dependencies: libobs_opengl_deps,
   install: true,
