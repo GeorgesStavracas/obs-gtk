@@ -21,6 +21,7 @@
 #include "obs-collection-template.h"
 
 #include "obs-application.h"
+#include "obs-collection.h"
 #include "obs-config-manager.h"
 
 #include <util/config-file.h>
@@ -76,9 +77,18 @@ static void create_collection_in_thread_func(GTask *task,
 					     gpointer task_data,
 					     GCancellable *cancellable)
 {
-	// TODO
+	ObsCollection *collection = NULL;
+	CreateData *data = task_data;
 
-	g_task_return_pointer(task, NULL, NULL);
+	config_set_string(data->config, "general", "name",
+			  data->collection_name);
+	config_save(data->config);
+
+	collection = obs_collection_new(data->collection_id, data->config);
+
+	// TODO: add template scenes
+
+	g_task_return_pointer(task, g_object_ref(collection), g_object_unref);
 }
 
 GdkPaintable *create_paintable_from_resource(const char *resource_path)
@@ -229,7 +239,7 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	ObsConfigManager *config_manager;
 	GApplication *application;
 	CreateData *data = NULL;
-	config_t *config;
+	config_t *config = NULL;
 	GTask *task = NULL;
 	char *id = NULL;
 
@@ -245,23 +255,33 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	do {
 		g_clear_pointer(&id, g_free);
 		if (config) {
-			obs_config_manager_release(config_manager,
-						   OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-						   collection_name);
+			obs_config_manager_release(
+				config_manager,
+				OBS_CONFIG_SCOPE_SCENE_COLLECTION,
+				collection_name);
+			config = NULL;
 		}
 
-		id = g_uuid_string_random ();
-		config = obs_config_manager_open(config_manager,
-						 OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-						 id, CONFIG_OPEN_EXISTING);
+		id = g_uuid_string_random();
+		config = obs_config_manager_open(
+			config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION, id,
+			CONFIG_OPEN_EXISTING);
 	} while (config != NULL);
 
+	// TODO: ugh...
+	if (config) {
+		obs_config_manager_release(config_manager,
+					   OBS_CONFIG_SCOPE_SCENE_COLLECTION,
+					   collection_name);
+		config = NULL;
+	}
+
 	data = g_new0(CreateData, 1);
-	data->collection_id = g_steal_pointer(&id);
-	data->collection_name = g_strdup(collection_name);
 	data->config = obs_config_manager_open(
-		config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-		collection_name, CONFIG_OPEN_ALWAYS);
+		config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION, id,
+		CONFIG_OPEN_ALWAYS);
+	data->collection_name = g_strdup(collection_name);
+	data->collection_id = g_steal_pointer(&id);
 
 	task = g_task_new(self, cancellable, callback, user_data);
 	g_task_set_task_data(task, data, create_data_free);
@@ -271,9 +291,9 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	g_object_unref(task);
 }
 
-gpointer obs_collection_template_create_finish(ObsCollectionTemplate *self,
-					       GAsyncResult *result,
-					       GError **error)
+ObsCollection *
+obs_collection_template_create_finish(ObsCollectionTemplate *self,
+				      GAsyncResult *result, GError **error)
 {
 	g_return_val_if_fail(OBS_IS_COLLECTION_TEMPLATE(self), NULL);
 	g_return_val_if_fail(g_task_is_valid(result, self), NULL);
