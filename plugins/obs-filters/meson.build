@@ -45,7 +45,7 @@ obs_filters_sources = generated_sources + files([
   'scroll-filter.c',
 ])
 
-obs_filters_plugin = shared_library('obs-filters',
+obs_filters_plugin = shared_module('obs-filters',
   sources: obs_filters_sources,
   dependencies: obs_filters_deps,
   install: true,

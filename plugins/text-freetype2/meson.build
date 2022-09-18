@@ -14,7 +14,7 @@ if host_system not in ['windows', 'darwin']
   text_freetype2_sources += files('find-font-unix.c')
 endif
 
-text_freetype2_plugin = shared_library('text-freetype2',
+text_freetype2_plugin = shared_module('text-freetype2',
   sources: text_freetype2_sources,
   dependencies: text_freetype2_deps,
   install: true,
