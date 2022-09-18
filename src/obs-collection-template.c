@@ -255,31 +255,30 @@ void obs_collection_template_create_async(ObsCollectionTemplate *self,
 	do {
 		g_clear_pointer(&id, g_free);
 		if (config) {
-			obs_config_manager_release(
-				config_manager,
-				OBS_CONFIG_SCOPE_SCENE_COLLECTION,
-				collection_name);
+			obs_config_manager_release(config_manager,
+						   OBS_CONFIG_SCOPE_COLLECTION,
+						   collection_name);
 			config = NULL;
 		}
 
 		id = g_uuid_string_random();
-		config = obs_config_manager_open(
-			config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION, id,
-			CONFIG_OPEN_EXISTING);
+		config = obs_config_manager_open(config_manager,
+						 OBS_CONFIG_SCOPE_COLLECTION,
+						 id, CONFIG_OPEN_EXISTING);
 	} while (config != NULL);
 
 	// TODO: ugh...
 	if (config) {
 		obs_config_manager_release(config_manager,
-					   OBS_CONFIG_SCOPE_SCENE_COLLECTION,
+					   OBS_CONFIG_SCOPE_COLLECTION,
 					   collection_name);
 		config = NULL;
 	}
 
 	data = g_new0(CreateData, 1);
-	data->config = obs_config_manager_open(
-		config_manager, OBS_CONFIG_SCOPE_SCENE_COLLECTION, id,
-		CONFIG_OPEN_ALWAYS);
+	data->config = obs_config_manager_open(config_manager,
+					       OBS_CONFIG_SCOPE_COLLECTION, id,
+					       CONFIG_OPEN_ALWAYS);
 	data->collection_name = g_strdup(collection_name);
 	data->collection_id = g_steal_pointer(&id);
 

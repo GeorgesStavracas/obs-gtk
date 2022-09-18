@@ -60,8 +60,8 @@ static char *build_dir(ObsConfigScope scope, const char *id)
 	case OBS_CONFIG_SCOPE_PROFILE:
 		path = g_build_filename(config_dir, "profiles", id, NULL);
 		break;
-	case OBS_CONFIG_SCOPE_SCENE_COLLECTION:
-		path = g_build_filename(config_dir, "scenes", id, NULL);
+	case OBS_CONFIG_SCOPE_COLLECTION:
+		path = g_build_filename(config_dir, "collection", id, NULL);
 		break;
 	case OBS_CONFIG_SCOPE_PLUGIN:
 		path = g_build_filename(config_dir, "plugins", id, NULL);
@@ -90,9 +90,9 @@ static char *build_path(ObsConfigScope scope, const char *id)
 		path = g_build_filename(config_dir, "profiles", id,
 					"config.ini", NULL);
 		break;
-	case OBS_CONFIG_SCOPE_SCENE_COLLECTION:
-		path = g_build_filename(config_dir, "scenes", id, "config.ini",
-					NULL);
+	case OBS_CONFIG_SCOPE_COLLECTION:
+		path = g_build_filename(config_dir, "collection", id,
+					"config.ini", NULL);
 		break;
 	case OBS_CONFIG_SCOPE_PLUGIN:
 		path = g_build_filename(config_dir, "plugins", id, "config.ini",
