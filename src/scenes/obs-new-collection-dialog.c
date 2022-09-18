@@ -63,9 +63,10 @@ static void on_collection_created_cb(GObject *source_object,
 				     GAsyncResult *result, gpointer user_data)
 {
 	ObsNewCollectionDialog *self = OBS_NEW_COLLECTION_DIALOG(user_data);
+	ObsCollection *collection;
 	GError *error = NULL;
 
-	obs_collection_template_create_finish(
+	collection = obs_collection_template_create_finish(
 		OBS_COLLECTION_TEMPLATE(source_object), result, &error);
 
 	if (error) {
@@ -74,6 +75,8 @@ static void on_collection_created_cb(GObject *source_object,
 	}
 
 	gtk_window_close(GTK_WINDOW(self));
+
+	g_object_unref(collection);
 }
 
 static void on_create_collection_action_activated_cb(GtkWidget *widget,
