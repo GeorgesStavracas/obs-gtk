@@ -247,12 +247,6 @@
   <menu id="profile_menu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">About OBS Studio</attribute>
-      </item>
-    </section>
-
-    <section>
-      <item>
         <attribute name="label" translatable="yes">Manage profiles…</attribute>
         <attribute name="action">window.show-profiles</attribute>
       </item>
