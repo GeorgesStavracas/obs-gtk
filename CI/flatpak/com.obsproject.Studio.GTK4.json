@@ -1,7 +1,7 @@
 {
     "app-id" : "com.obsproject.Studio.GTK4",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
+    "runtime-version" : "43",
     "sdk" : "org.gnome.Sdk",
     "command" : "obs-gtk4",
     "finish-args" : [
