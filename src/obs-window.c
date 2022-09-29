@@ -84,17 +84,18 @@ static gboolean update_fps_cb(gpointer user_data)
  * Actions
  */
 
-static char* build_about_copyright (void)
+static char *build_about_copyright(void)
 {
 	GDateTime *dt = g_date_time_new_now_local();
 	char *copyright;
 
-	copyright = g_strdup_printf(_("Copyright \xC2\xA9 2012\xE2\x80\x93%d The OBS GTK authors"),
-				    g_date_time_get_year (dt));
+	copyright = g_strdup_printf(
+		_("Copyright \xC2\xA9 2012\xE2\x80\x93%d The OBS GTK authors"),
+		g_date_time_get_year(dt));
 
 	g_clear_pointer(&dt, g_date_time_unref);
 
-	return g_steal_pointer (&copyright);
+	return g_steal_pointer(&copyright);
 }
 
 static void on_about_action_cb(GtkWidget *widget, const char *action_name,
@@ -106,20 +107,17 @@ static void on_about_action_cb(GtkWidget *widget, const char *action_name,
 	g_assert(g_strcmp0(action_name, "window.about") == 0);
 	g_assert(parameter == NULL);
 
-	copyright = build_about_copyright ();
-	about_window = g_object_new (ADW_TYPE_ABOUT_WINDOW,
-				     "transient-for", GTK_WINDOW (widget),
-				     "application-icon", "com.obsproject.Studio.GTK4",
-				     "application-name", "OBS GTK",
-				     "copyright", copyright,
-				     "designers", OBS_STRV_INIT("Georges Basile Stavracas Neto"),
-				     "developer-name", "Hugh \"Jim\" Bailey, et al",
-				     "issue-url", "https://github.com/GeorgesStavracas/obs-gtk/issues",
-				     "license-type", GTK_LICENSE_GPL_2_0,
-				     "translator-credits", _("translator-credits"),
-				     "version", OBS_VERSION,
-				     NULL);
-	gtk_window_present (GTK_WINDOW (about_window));
+	copyright = build_about_copyright();
+	about_window = g_object_new(
+		ADW_TYPE_ABOUT_WINDOW, "transient-for", GTK_WINDOW(widget),
+		"application-icon", "com.obsproject.Studio.GTK4",
+		"application-name", "OBS GTK", "copyright", copyright,
+		"designers", OBS_STRV_INIT("Georges Basile Stavracas Neto"),
+		"developer-name", "Hugh \"Jim\" Bailey, et al", "issue-url",
+		"https://github.com/GeorgesStavracas/obs-gtk/issues",
+		"license-type", GTK_LICENSE_GPL_2_0, "translator-credits",
+		_("translator-credits"), "version", OBS_VERSION, NULL);
+	gtk_window_present(GTK_WINDOW(about_window));
 
 	g_clear_pointer(&copyright, g_free);
 }

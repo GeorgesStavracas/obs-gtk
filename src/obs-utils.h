@@ -24,7 +24,7 @@
 
 G_BEGIN_DECLS
 
-#define OBS_STRV_INIT(...) ((const char * const[]) { __VA_ARGS__, NULL})
+#define OBS_STRV_INIT(...) ((const char *const[]){__VA_ARGS__, NULL})
 
 AdwColorScheme obs_color_scheme_from_string(const char *string);
 const char *obs_color_scheme_to_string(AdwColorScheme color_scheme);
