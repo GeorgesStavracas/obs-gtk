@@ -23,9 +23,11 @@
 #include "obs-activities-page.h"
 #include "obs-mixer-page.h"
 #include "obs-collections-page.h"
+#include "obs-utils.h"
 #include "preferences/obs-preferences-dialog.h"
 #include "profiles/obs-profiles-dialog.h"
 
+#include <glib/gi18n.h>
 #include <obs.h>
 #include <util/platform.h>
 #include <util/threading.h>
@@ -81,6 +83,46 @@ static gboolean update_fps_cb(gpointer user_data)
 /*
  * Actions
  */
+
+static char* build_about_copyright (void)
+{
+	GDateTime *dt = g_date_time_new_now_local();
+	char *copyright;
+
+	copyright = g_strdup_printf(_("Copyright \xC2\xA9 2012\xE2\x80\x93%d The OBS GTK authors"),
+				    g_date_time_get_year (dt));
+
+	g_clear_pointer(&dt, g_date_time_unref);
+
+	return g_steal_pointer (&copyright);
+}
+
+static void on_about_action_cb(GtkWidget *widget, const char *action_name,
+			       GVariant *parameter)
+{
+	GtkWidget *about_window;
+	char *copyright;
+
+	g_assert(g_strcmp0(action_name, "window.about") == 0);
+	g_assert(parameter == NULL);
+
+	copyright = build_about_copyright ();
+	about_window = g_object_new (ADW_TYPE_ABOUT_WINDOW,
+				     "transient-for", GTK_WINDOW (widget),
+				     "application-icon", "com.obsproject.Studio.GTK4",
+				     "application-name", "OBS GTK",
+				     "copyright", copyright,
+				     "designers", OBS_STRV_INIT("Georges Basile Stavracas Neto"),
+				     "developer-name", "Hugh \"Jim\" Bailey, et al",
+				     "issue-url", "https://github.com/GeorgesStavracas/obs-gtk/issues",
+				     "license-type", GTK_LICENSE_GPL_2_0,
+				     "translator-credits", _("translator-credits"),
+				     "version", OBS_VERSION,
+				     NULL);
+	gtk_window_present (GTK_WINDOW (about_window));
+
+	g_clear_pointer(&copyright, g_free);
+}
 
 static void on_open_url_action_cb(GtkWidget *widget, const char *action_name,
 				  GVariant *parameter)
@@ -169,6 +211,8 @@ static void obs_window_class_init(ObsWindowClass *klass)
 	gtk_widget_class_bind_template_child(widget_class, ObsWindow,
 					     fps_label);
 
+	gtk_widget_class_install_action(widget_class, "window.about", NULL,
+					on_about_action_cb);
 	gtk_widget_class_install_action(widget_class, "window.open-url", "s",
 					on_open_url_action_cb);
 	gtk_widget_class_install_action(widget_class, "window.show-preferences",
