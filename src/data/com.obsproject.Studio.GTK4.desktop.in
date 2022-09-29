@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=1.0
+Name=OBS GTK
+GenericName=Streaming/Recording Software
+Comment=Free and Open Source Streaming/Recording Software
+Exec=obs-gtk4
+Icon=com.obsproject.Studio.GTK4
+Terminal=false
+Type=Application
+Categories=AudioVideo;Recorder;
+StartupNotify=true
+StartupWMClass=obs
+
