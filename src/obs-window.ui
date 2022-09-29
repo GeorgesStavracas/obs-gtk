@@ -238,7 +238,8 @@
 
     <section>
       <item>
-        <attribute name="label" translatable="yes">About OBS Studio</attribute>
+        <attribute name="label" translatable="yes">About OBS GTK</attribute>
+        <attribute name="action">window.about</attribute>
       </item>
     </section>
   </menu>
