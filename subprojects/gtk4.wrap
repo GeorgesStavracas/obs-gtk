@@ -1,0 +1,5 @@
+[wrap-git]
+directory=gtk4
+url=https://gitlab.gnome.org/GNOME/gtk4.git
+revision=4.8.1
+depth=1
