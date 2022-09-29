@@ -1,5 +1,7 @@
 gnome = import('gnome')
 
+subdir('data')
+
 obs_gtk_deps = [
   dependency('gtk4', version: '>= 4.8'),
   dependency('libadwaita-1', version: '>= 1.2'),
@@ -53,7 +55,7 @@ obs_gtk_sources += gnome.compile_resources(
   c_name: 'obs_gtk'
 )
 
-c_args = []
+c_args = [ '-DHAVE_OBSCONFIG_H' ]
 if host_system == 'linux'
   c_args += [ '-DDL_OPENGL="libobs-opengl.so"']
 endif
