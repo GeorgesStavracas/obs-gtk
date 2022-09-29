@@ -343,7 +343,7 @@ jobs:
       run:
         shell: bash
     container:
-      image: bilelmoussaoui/flatpak-github-actions:kde-6.3
+      image: bilelmoussaoui/flatpak-github-actions:gnome-43
       options: --privileged
     steps:
       - name: 'Check for Github Labels'
@@ -377,8 +377,6 @@ jobs:
         with:
           bundle: obs-studio-flatpak-${{ env.OBS_GIT_HASH }}.flatpak
           manifest-path: CI/flatpak/com.obsproject.Studio.GTK4.json
-          repository-name: gnome-nightly
-          repository-url: https://nightly.gnome.org/gnome-nightly.flatpakrepo
           cache-key: flatpak-builder-${{ hashFiles('CI/flatpak/com.obsproject.Studio.GTK4.json') }}
 
   windows_package:
